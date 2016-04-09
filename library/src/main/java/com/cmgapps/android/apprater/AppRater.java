@@ -25,10 +25,10 @@ import java.util.Date;
 
 /**
  * Class that utilizes usage count and time to open a rate dialog.
- * <p/>
+ * <p>
  * Use {@link #incrementUseCount()} on your main activity
  * {@link Activity#onCreate(Bundle)} implementation.
- * <p/>
+ * <p>
  * Then call {@link #checkForRating()} to check if the requirements are met to
  * show the dialog and finally call {@link #show(Context)} to show the rating dialog
  */
@@ -115,7 +115,7 @@ public class AppRater {
 
     /**
      * Call to check if the requirements to open the rating dialog are met
-     * <p/>
+     * <p>
      * <b>NOTICE:</b> This method is thread safe
      *
      * @return true if requirements are met.
@@ -135,7 +135,7 @@ public class AppRater {
 
     /**
      * Increments the usage count.
-     * <p/>
+     * <p>
      * <b>NOTICE:</b> This method is thread safe
      */
     public synchronized void incrementUseCount() {
@@ -181,7 +181,7 @@ public class AppRater {
 
     /**
      * Shows a default {@link AlertDialog}. Must be called from main thread
-     * <p></p>
+     * <p>
      * Set the {@link AppRaterActivity} in you manifest
      *
      * @param context A Context to show the dialog

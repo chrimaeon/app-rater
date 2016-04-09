@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 /**
  * App Rater Dialog Activity
- * <p></p>
+ * <p>
  * Declare in AndroidManifest.xml with dialog theme
  * <pre>{@code
  *   <activity
