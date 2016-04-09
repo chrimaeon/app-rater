@@ -25,26 +25,25 @@ import java.util.Date;
 
 /**
  * Class that utilizes usage count and time to open a rate dialog.
- * <p>
+ * <p/>
  * Use {@link #incrementUseCount()} on your main activity
  * {@link Activity#onCreate(Bundle)} implementation.
- * <p>
+ * <p/>
  * Then call {@link #checkForRating()} to check if the requirements are met to
  * show the dialog and finally call {@link #show(Context)} to show the rating dialog
  */
 public class AppRater {
+    static final String APP_RATED = "rated";
+    static final String DECLINED_RATE = "declined_rate";
+    static final String REMIND_LATER_DATE = "remind_later_date";
     private static final String TAG = "AppRater";
     private static final String APP_RATE_FILE_NAME = "AppRater";
     private static final int LAUNCHES_UNTIL_PROMPT = 5;
     private static final long DAYS_UNTIL_PROMPT = 5 * DateUtils.DAY_IN_MILLIS;
     private static final long DAYS_UNTIL_REMIND_AGAIN = 2 * DateUtils.DAY_IN_MILLIS;
-
     private static final String FIRST_USE = "first_use";
     private static final String USE_COUNT = "use_count";
-    private static final String DECLINED_RATE = "declined_rate";
     private static final String TRACKING_VERSION = "tracking_version";
-    private static final String REMIND_LATER_DATE = "remind_later_date";
-    private static final String APP_RATED = "rated";
     private static final boolean RATER_DEBUG = false;
     private static AppRater sInstance = null;
     private SharedPreferences mPref;
@@ -116,7 +115,7 @@ public class AppRater {
 
     /**
      * Call to check if the requirements to open the rating dialog are met
-     * <p>
+     * <p/>
      * <b>NOTICE:</b> This method is thread safe
      *
      * @return true if requirements are met.
@@ -136,7 +135,7 @@ public class AppRater {
 
     /**
      * Increments the usage count.
-     * <p>
+     * <p/>
      * <b>NOTICE:</b> This method is thread safe
      */
     public synchronized void incrementUseCount() {
@@ -172,7 +171,18 @@ public class AppRater {
     }
 
     /**
+     * Get the {@link SharedPreferences} used to save state
+     *
+     * @return The SharedPreferences
+     */
+    public SharedPreferences getPreferences() {
+        return mPref;
+    }
+
+    /**
      * Shows a default {@link AlertDialog}. Must be called from main thread
+     * <p></p>
+     * Set the {@link AppRaterActivity} in you manifest
      *
      * @param context A Context to show the dialog
      */
