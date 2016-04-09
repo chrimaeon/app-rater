@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (c) 2016. Christian Grach <christian.grach@cmgapps.com
+  -->
+
+<resources>
+
+    <string name="dialog_cmgrate_title">Noter!</string>
+    <string name="dialog_cmgrate_message_fmt">Si vous aimez %1$s, s\'il vous plait prenez un moment pour la noter.\nMerci pour votre soutien!</string>
+    <string name="dialog_cmgrate_ok">Noter</string>
+    <string name="dialog_cmgrate_later">Plus tard</string>
+    <string name="dialog_cmgrate_no">Non, merci</string>
+
+</resources>
