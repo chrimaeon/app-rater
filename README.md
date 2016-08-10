@@ -23,7 +23,7 @@ Android Utilities are now pushed to Maven Central as an AAR, so you just need to
 Developed By
 ------------
 
-* Christian Grach - <christian.grach@gmx.at>
+* Christian Grach - <christian.grach@cmgapps.com>
 
 License
 -------

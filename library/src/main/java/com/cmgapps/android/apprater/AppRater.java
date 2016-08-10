@@ -25,32 +25,30 @@ import java.util.Date;
 
 /**
  * Class that utilizes usage count and time to open a rate dialog.
- * <p>
+ * <p></p>
  * Use {@link #incrementUseCount()} on your main activity
  * {@link Activity#onCreate(Bundle)} implementation.
- * <p>
+ * <p></p>
  * Then call {@link #checkForRating()} to check if the requirements are met to
- * show the dialog and finally call {@link #show(Context)} to show the rating dialog
+ * show the dialog and finally call {@link #show(Activity)} to show the rating dialog
  */
 public class AppRater {
+    static final String APP_RATED = "rated";
+    static final String DECLINED_RATE = "declined_rate";
+    static final String REMIND_LATER_DATE = "remind_later_date";
     private static final String TAG = "AppRater";
     private static final String APP_RATE_FILE_NAME = "AppRater";
     private static final int LAUNCHES_UNTIL_PROMPT = 5;
     private static final long DAYS_UNTIL_PROMPT = 5 * DateUtils.DAY_IN_MILLIS;
     private static final long DAYS_UNTIL_REMIND_AGAIN = 2 * DateUtils.DAY_IN_MILLIS;
-
     private static final String FIRST_USE = "first_use";
     private static final String USE_COUNT = "use_count";
-    private static final String DECLINED_RATE = "declined_rate";
     private static final String TRACKING_VERSION = "tracking_version";
-    private static final String REMIND_LATER_DATE = "remind_later_date";
-    private static final String APP_RATED = "rated";
     private static final boolean RATER_DEBUG = false;
     private static AppRater sInstance = null;
     private SharedPreferences mPref;
     private Context mContext;
     private boolean mDebug = false;
-    private AlertDialog mDialog;
     private int mLaunchesUntilPrompt;
     private long mDaysUntilPrompt;
     private long mDaysUntilRemindAgain;
@@ -116,7 +114,7 @@ public class AppRater {
 
     /**
      * Call to check if the requirements to open the rating dialog are met
-     * <p>
+     * <p></p>
      * <b>NOTICE:</b> This method is thread safe
      *
      * @return true if requirements are met.
@@ -136,35 +134,36 @@ public class AppRater {
 
     /**
      * Increments the usage count.
-     * <p>
+     * <p></p>
      * <b>NOTICE:</b> This method is thread safe
      */
     public synchronized void incrementUseCount() {
 
         Editor editor = mPref.edit();
-        int version_code = 0;
+        int versionCode;
 
         try {
-            version_code = mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0).versionCode;
+            versionCode = mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0).versionCode;
         } catch (NameNotFoundException exc) {
+            versionCode = 0;
             Log.e(TAG, "PackageName not found: " + mContext.getPackageName());
         }
 
-        int tracking_version = mPref.getInt(TRACKING_VERSION, -1);
+        int trackingVersion = mPref.getInt(TRACKING_VERSION, -1);
 
-        if (tracking_version == -1) {
-            tracking_version = version_code;
-            editor.putInt(TRACKING_VERSION, tracking_version);
+        if (trackingVersion == -1) {
+            trackingVersion = versionCode;
+            editor.putInt(TRACKING_VERSION, trackingVersion);
         }
 
-        if (tracking_version == version_code) {
+        if (trackingVersion == versionCode) {
 
             if (mPref.getLong(FIRST_USE, 0L) == 0L)
                 editor.putLong(FIRST_USE, System.currentTimeMillis());
 
             editor.putInt(USE_COUNT, mPref.getInt(USE_COUNT, 0) + 1);
         } else {
-            editor.putInt(TRACKING_VERSION, version_code).putLong(FIRST_USE, System.currentTimeMillis()).putInt(USE_COUNT, 1)
+            editor.putInt(TRACKING_VERSION, versionCode).putLong(FIRST_USE, System.currentTimeMillis()).putInt(USE_COUNT, 1)
                     .putBoolean(DECLINED_RATE, false).putLong(REMIND_LATER_DATE, 0L).putBoolean(APP_RATED, false);
         }
 
@@ -172,17 +171,27 @@ public class AppRater {
     }
 
     /**
+     * Get the {@link SharedPreferences} used to save state
+     *
+     * @return The SharedPreferences
+     */
+    public SharedPreferences getPreferences() {
+        return mPref;
+    }
+
+    /**
      * Shows a default {@link AlertDialog}. Must be called from main thread
      *
-     * @param context A Context to show the dialog
+     * @param activity An {@link Activity} to show the dialog from.
      */
-    public void show(@NonNull final Context context) {
+    public void show(@NonNull final Activity activity) {
 
         if (Looper.myLooper() != Looper.getMainLooper()) {
             throw new IllegalStateException("AppRater.show() must be called from main thread");
         }
 
-        context.startActivity(new Intent(context, AppRaterActivity.class));
+        activity.startActivity(new Intent(activity, AppRaterActivity.class));
+        activity.overridePendingTransition(0, 0);
     }
 
     private static String ratePreferenceToString(SharedPreferences pref) {
