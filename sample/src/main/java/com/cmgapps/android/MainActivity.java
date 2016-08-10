@@ -6,7 +6,7 @@ package com.cmgapps.android;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.view.View;
 
 import com.cmgapps.android.apprater.AppRater;
 
@@ -19,9 +19,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         AppRater appRater = AppRater.getInstance(this);
         appRater.incrementUseCount();
-        Log.i(TAG, appRater.toString());
-        if (savedInstanceState == null) {
-            appRater.show(this);
-        }
+    }
+
+    public void showDialogClicked(View v) {
+        AppRater.getInstance(this).show(this);
+
     }
 }
