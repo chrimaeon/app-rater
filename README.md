@@ -15,10 +15,10 @@ It is used in my Android&trade; Projects:
 Gradle
 ------
 
-Android Utilities are now pushed to Maven Central as an AAR, so you just need to add the following dependency to your `build.gradle`.
+ Add the following dependency to your `build.gradle`.
 
     dependencies {
-        compile 'com.cmgapps.android:app-rater:0.1'
+        compile 'com.cmgapps.android:app-rater:0.2'
     }
 
 Developed By
