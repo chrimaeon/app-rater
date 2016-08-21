@@ -9,6 +9,7 @@
     <application>
         <activity
             android:name=".AppRaterActivity"
+            android:launchMode="singleInstance"
             android:theme="@style/CMGAppRaterActivity" />
     </application>
 </manifest>
