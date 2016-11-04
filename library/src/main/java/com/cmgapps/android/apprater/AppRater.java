@@ -17,6 +17,9 @@ import android.support.annotation.NonNull;
 import android.text.format.DateUtils;
 import android.util.Log;
 
+import com.cmgapps.android.apprater.store.GooglePlayStore;
+import com.cmgapps.android.apprater.store.Store;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -46,23 +49,31 @@ public class AppRater {
     private static final String TRACKING_VERSION = "tracking_version";
     private static final boolean RATER_DEBUG = false;
     private static AppRater sInstance = null;
+
+    private int mVersionCode;
     private SharedPreferences mPref;
-    private Context mContext;
     private boolean mDebug = false;
     private int mLaunchesUntilPrompt;
     private long mDaysUntilPrompt;
     private long mDaysUntilRemindAgain;
+    private Store mStore = new GooglePlayStore();
 
     private AppRater(Context context) {
         if (context == null) {
             throw new IllegalArgumentException("context cannot be null");
         }
 
-        mContext = context.getApplicationContext();
-        mPref = mContext.getSharedPreferences(APP_RATE_FILE_NAME, Context.MODE_PRIVATE);
+        mPref = context.getSharedPreferences(APP_RATE_FILE_NAME, Context.MODE_PRIVATE);
         mLaunchesUntilPrompt = LAUNCHES_UNTIL_PROMPT;
         mDaysUntilPrompt = DAYS_UNTIL_PROMPT;
         mDaysUntilRemindAgain = DAYS_UNTIL_REMIND_AGAIN;
+
+        try {
+            mVersionCode = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
+        } catch (NameNotFoundException exc) {
+            mVersionCode = 0;
+            Log.e(TAG, "PackageName not found: " + context.getPackageName());
+        }
     }
 
     /**
@@ -79,6 +90,10 @@ public class AppRater {
 
             return sInstance;
         }
+    }
+
+    public void setStore(@NonNull Store store) {
+        mStore = store;
     }
 
     /**
@@ -140,30 +155,23 @@ public class AppRater {
     public synchronized void incrementUseCount() {
 
         Editor editor = mPref.edit();
-        int versionCode;
 
-        try {
-            versionCode = mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0).versionCode;
-        } catch (NameNotFoundException exc) {
-            versionCode = 0;
-            Log.e(TAG, "PackageName not found: " + mContext.getPackageName());
-        }
 
         int trackingVersion = mPref.getInt(TRACKING_VERSION, -1);
 
         if (trackingVersion == -1) {
-            trackingVersion = versionCode;
+            trackingVersion = mVersionCode;
             editor.putInt(TRACKING_VERSION, trackingVersion);
         }
 
-        if (trackingVersion == versionCode) {
+        if (trackingVersion == mVersionCode) {
 
             if (mPref.getLong(FIRST_USE, 0L) == 0L)
                 editor.putLong(FIRST_USE, System.currentTimeMillis());
 
             editor.putInt(USE_COUNT, mPref.getInt(USE_COUNT, 0) + 1);
         } else {
-            editor.putInt(TRACKING_VERSION, versionCode).putLong(FIRST_USE, System.currentTimeMillis()).putInt(USE_COUNT, 1)
+            editor.putInt(TRACKING_VERSION, mVersionCode).putLong(FIRST_USE, System.currentTimeMillis()).putInt(USE_COUNT, 1)
                     .putBoolean(DECLINED_RATE, false).putLong(REMIND_LATER_DATE, 0L).putBoolean(APP_RATED, false);
         }
 
@@ -175,7 +183,7 @@ public class AppRater {
      *
      * @return The SharedPreferences
      */
-    public SharedPreferences getPreferences() {
+    SharedPreferences getPreferences() {
         return mPref;
     }
 
@@ -190,7 +198,9 @@ public class AppRater {
             throw new IllegalStateException("AppRater.show() must be called from main thread");
         }
 
-        activity.startActivity(new Intent(activity, AppRaterActivity.class));
+        Intent intent = new Intent(activity, AppRaterActivity.class);
+        intent.putExtra(AppRaterActivity.EXTRA_STORE_URI, mStore.getStoreUri(activity));
+        activity.startActivity(intent);
         activity.overridePendingTransition(0, 0);
     }
 
