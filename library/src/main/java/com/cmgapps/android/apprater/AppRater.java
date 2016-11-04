@@ -27,11 +27,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
+ * <p>
  * Class that utilizes usage count and time to open a rate dialog.
- * <p></p>
+ * </p>
+ * <p>
  * Use {@link #incrementUseCount()} on your main activity
  * {@link Activity#onCreate(Bundle)} implementation.
- * <p></p>
+ * </p>
  * Then call {@link #checkForRating()} to check if the requirements are met to
  * show the dialog and finally call {@link #show(Activity)} to show the rating dialog
  */
@@ -128,8 +130,9 @@ public class AppRater {
     }
 
     /**
+     * <p>
      * Call to check if the requirements to open the rating dialog are met
-     * <p></p>
+     * </p>
      * <b>NOTICE:</b> This method is thread safe
      *
      * @return true if requirements are met.
@@ -148,8 +151,9 @@ public class AppRater {
     }
 
     /**
+     * <p>
      * Increments the usage count.
-     * <p></p>
+     * </p>
      * <b>NOTICE:</b> This method is thread safe
      */
     public synchronized void incrementUseCount() {
