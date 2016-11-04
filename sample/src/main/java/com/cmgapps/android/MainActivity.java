@@ -12,17 +12,17 @@ import com.cmgapps.android.apprater.AppRater;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
+    private AppRater mAppRater;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        AppRater appRater = AppRater.getInstance(this);
-        appRater.incrementUseCount();
+        mAppRater = AppRater.getInstance(this);
+        mAppRater.incrementUseCount();
     }
 
     public void showDialogClicked(View v) {
-        AppRater.getInstance(this).show(this);
-
+        mAppRater.show(this);
     }
 }

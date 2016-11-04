@@ -23,6 +23,7 @@ import android.util.Log;
  */
 public class AppRaterActivity extends AppCompatActivity {
 
+    public static final String EXTRA_STORE_URI = BuildConfig.APPLICATION_ID + ".extra.STORE_URI";
     private static final String TAG = "AppRaterActivity";
     /*used by inner class*/ boolean mButtonClicked;
 
@@ -32,6 +33,7 @@ public class AppRaterActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             RaterFragment raterFragment = new RaterFragment();
+            raterFragment.setArguments(getIntent().getExtras());
             raterFragment.show(getSupportFragmentManager(), "CMGAppsRaterFragment");
         }
     }
@@ -71,7 +73,8 @@ public class AppRaterActivity extends AppCompatActivity {
                             AppRaterActivity activity = (AppRaterActivity) getActivity();
                             AppRater.getInstance(activity).getPreferences().edit().putBoolean(AppRater.APP_RATED, true).apply();
                             activity.mButtonClicked = true;
-                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + activity.getPackageName()));
+                            Uri storeUri = getArguments().getParcelable(EXTRA_STORE_URI);
+                            Intent intent = new Intent(Intent.ACTION_VIEW, storeUri);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
                             activity.finish();
