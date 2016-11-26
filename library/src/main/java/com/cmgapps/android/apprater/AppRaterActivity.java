@@ -4,6 +4,7 @@
 
 package com.cmgapps.android.apprater;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,7 +24,7 @@ import android.util.Log;
  */
 public class AppRaterActivity extends AppCompatActivity {
 
-    public static final String EXTRA_STORE_URI = BuildConfig.APPLICATION_ID + ".extra.STORE_URI";
+    public static final String EXTRA_STORE_URI = "com.cmgapps.android.apprater.extra.STORE_URI";
     private static final String TAG = "AppRaterActivity";
     /*used by inner class*/ boolean mButtonClicked;
 
@@ -71,6 +72,11 @@ public class AppRaterActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             AppRaterActivity activity = (AppRaterActivity) getActivity();
+
+                            if (activity == null) {
+                                return;
+                            }
+
                             AppRater.getInstance(activity).getPreferences().edit().putBoolean(AppRater.APP_RATED, true).apply();
                             activity.mButtonClicked = true;
                             Uri storeUri = getArguments().getParcelable(EXTRA_STORE_URI);
@@ -84,6 +90,11 @@ public class AppRaterActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             AppRaterActivity activity = (AppRaterActivity) getActivity();
+
+                            if (activity == null) {
+                                return;
+                            }
+
                             AppRater.getInstance(activity).getPreferences().edit().putLong(AppRater.REMIND_LATER_DATE, System.currentTimeMillis()).apply();
                             activity.mButtonClicked = true;
                             activity.finish();
@@ -93,6 +104,11 @@ public class AppRaterActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             AppRaterActivity activity = (AppRaterActivity) getActivity();
+
+                            if (activity == null) {
+                                return;
+                            }
+                            
                             AppRater.getInstance(activity).getPreferences().edit().putLong(AppRater.REMIND_LATER_DATE, System.currentTimeMillis()).apply();
                             activity.mButtonClicked = true;
                             activity.finish();
@@ -103,7 +119,11 @@ public class AppRaterActivity extends AppCompatActivity {
 
         @Override
         public void onCancel(DialogInterface dialog) {
-            getActivity().finish();
+            Activity activity = getActivity();
+
+            if (activity != null) {
+                activity.finish();
+            }
         }
     }
 }
