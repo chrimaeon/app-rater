@@ -18,7 +18,7 @@ Gradle
  Add the following dependency to your `build.gradle`.
 
     dependencies {
-        compile 'com.cmgapps.android:app-rater:0.2'
+        compile 'com.cmgapps.android:app-rater:0.4'
     }
 
 Developed By
