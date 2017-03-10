@@ -12,6 +12,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.text.format.DateUtils;
@@ -39,8 +40,8 @@ import java.util.Date;
  */
 public class AppRater {
     static final String APP_RATED = "rated";
-    static final String DECLINED_RATE = "declined_rate";
     static final String REMIND_LATER_DATE = "remind_later_date";
+    private static final String DECLINED_RATE = "declined_rate";
     private static final String TAG = "AppRater";
     private static final String APP_RATE_FILE_NAME = "AppRater";
     private static final int LAUNCHES_UNTIL_PROMPT = 5;
@@ -55,9 +56,9 @@ public class AppRater {
     private int mVersionCode;
     private SharedPreferences mPref;
     private boolean mDebug = false;
-    private int mLaunchesUntilPrompt;
-    private long mDaysUntilPrompt;
-    private long mDaysUntilRemindAgain;
+    private int mLaunchesUntilPrompt = LAUNCHES_UNTIL_PROMPT;
+    private long mDaysUntilPrompt = DAYS_UNTIL_PROMPT;
+    private long mDaysUntilRemindAgain = DAYS_UNTIL_REMIND_AGAIN;
     private Store mStore = new GooglePlayStore();
 
     private AppRater(Context context) {
@@ -66,9 +67,6 @@ public class AppRater {
         }
 
         mPref = context.getSharedPreferences(APP_RATE_FILE_NAME, Context.MODE_PRIVATE);
-        mLaunchesUntilPrompt = LAUNCHES_UNTIL_PROMPT;
-        mDaysUntilPrompt = DAYS_UNTIL_PROMPT;
-        mDaysUntilRemindAgain = DAYS_UNTIL_REMIND_AGAIN;
 
         try {
             mVersionCode = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
@@ -192,20 +190,22 @@ public class AppRater {
     }
 
     /**
-     * Shows a default {@link AlertDialog}. Must be called from main thread
+     * Shows a default {@link AlertDialog}.
      *
      * @param activity An {@link Activity} to show the dialog from.
      */
     public void show(@NonNull final Activity activity) {
 
-        if (Looper.myLooper() != Looper.getMainLooper()) {
-            throw new IllegalStateException("AppRater.show() must be called from main thread");
-        }
-
-        Intent intent = new Intent(activity, AppRaterActivity.class);
-        intent.putExtra(AppRaterActivity.EXTRA_STORE_URI, mStore.getStoreUri(activity));
-        activity.startActivity(intent);
-        activity.overridePendingTransition(0, 0);
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(activity, AppRaterActivity.class);
+                intent.putExtra(AppRaterActivity.EXTRA_STORE_URI, mStore.getStoreUri(activity));
+                activity.startActivity(intent);
+                activity.overridePendingTransition(0, 0);
+            }
+        });
     }
 
     private static String ratePreferenceToString(SharedPreferences pref) {
