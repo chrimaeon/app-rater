@@ -6,7 +6,8 @@ package com.cmgapps.android.apprater.store;
 
 import android.content.Context;
 import android.net.Uri;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
 
 /**
  * A Store to open for rating

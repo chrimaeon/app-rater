@@ -9,23 +9,17 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.NonNull;
 import android.text.format.DateUtils;
 import android.util.Log;
 
 import com.cmgapps.android.apprater.store.GooglePlayStore;
 import com.cmgapps.android.apprater.store.Store;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import androidx.annotation.NonNull;
 
 /**
  * <p>
@@ -39,34 +33,23 @@ import java.util.Date;
  * show the dialog and finally call {@link #show(Activity)} to show the rating dialog
  */
 public class AppRater {
-    static final String APP_RATED = "rated";
-    static final String REMIND_LATER_DATE = "remind_later_date";
-    private static final String DECLINED_RATE = "declined_rate";
+
     private static final String TAG = "AppRater";
-    private static final String APP_RATE_FILE_NAME = "AppRater";
-    private static final int LAUNCHES_UNTIL_PROMPT = 5;
-    private static final long DAYS_UNTIL_PROMPT = 5 * DateUtils.DAY_IN_MILLIS;
-    private static final long DAYS_UNTIL_REMIND_AGAIN = 2 * DateUtils.DAY_IN_MILLIS;
-    private static final String FIRST_USE = "first_use";
-    private static final String USE_COUNT = "use_count";
-    private static final String TRACKING_VERSION = "tracking_version";
-    private static final boolean RATER_DEBUG = false;
-    private static AppRater sInstance = null;
+
+    private final boolean mDebug;
+    private final int mLaunchesUntilPrompt;
+    private final long mDaysUntilPrompt;
+    private final long mDaysUntilRemindAgain;
+    private final Store mStore;
+    private final PreferenceManager mPreferenceManager;
 
     private int mVersionCode;
-    private SharedPreferences mPref;
-    private boolean mDebug = false;
-    private int mLaunchesUntilPrompt = LAUNCHES_UNTIL_PROMPT;
-    private long mDaysUntilPrompt = DAYS_UNTIL_PROMPT;
-    private long mDaysUntilRemindAgain = DAYS_UNTIL_REMIND_AGAIN;
-    private Store mStore = new GooglePlayStore();
 
-    private AppRater(Context context) {
-        if (context == null) {
-            throw new IllegalArgumentException("context cannot be null");
-        }
+    private AppRater(@NonNull Builder builder) {
 
-        mPref = context.getSharedPreferences(APP_RATE_FILE_NAME, Context.MODE_PRIVATE);
+        final Context context = builder.mContext;
+
+        mPreferenceManager = new PreferenceManager(builder.mContext);
 
         try {
             mVersionCode = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
@@ -74,119 +57,58 @@ public class AppRater {
             mVersionCode = 0;
             Log.e(TAG, "PackageName not found: " + context.getPackageName());
         }
-    }
 
-    /**
-     * Get a {@link AppRater} instance
-     *
-     * @param context the Application Context
-     * @return The {@link AppRater} instance
-     */
-    public static AppRater getInstance(Context context) {
-        synchronized (AppRater.class) {
-            if (sInstance == null) {
-                sInstance = new AppRater(context);
-            }
-
-            return sInstance;
-        }
-    }
-
-    public void setStore(@NonNull Store store) {
-        mStore = store;
-    }
-
-    /**
-     * @param launchesUntilPrompt the launchesUntilPrompt to set
-     */
-    public void setLaunchesUntilPrompt(int launchesUntilPrompt) {
-        mLaunchesUntilPrompt = launchesUntilPrompt;
-    }
-
-    /**
-     * @param daysUntilPrompt the daysUntilPrompt to set
-     */
-    public void setDaysUntilPrompt(long daysUntilPrompt) {
-        mDaysUntilPrompt = daysUntilPrompt;
-    }
-
-    /**
-     * @param daysUntilRemindAgain the daysUntilRemindAgain to set
-     */
-    public void setDaysUntilRemindAgain(long daysUntilRemindAgain) {
-        mDaysUntilRemindAgain = daysUntilRemindAgain;
-    }
-
-    /**
-     * Sets the debug flag to display current <code>CmgAppRater</code> field
-     * values on {@link #checkForRating()}
-     *
-     * @param debug true to display debug output
-     */
-    public void setDebug(boolean debug) {
-        mDebug = debug;
+        mStore = builder.mStore;
+        mLaunchesUntilPrompt = builder.mLaunchesUntilPrompt;
+        mDaysUntilPrompt = builder.mDaysUntilPrompt;
+        mDaysUntilRemindAgain = builder.mDaysUntilRemindAgain;
+        mDebug = builder.mDebug;
     }
 
     /**
      * <p>
      * Call to check if the requirements to open the rating dialog are met
      * </p>
-     * <b>NOTICE:</b> This method is thread safe
      *
      * @return true if requirements are met.
      */
-    public synchronized boolean checkForRating() {
+    public boolean checkForRating() {
 
-        if (mDebug)
+        if (mDebug) {
             Log.i(TAG, "Rater Content:" + toString());
+        }
 
-        return RATER_DEBUG ||
-                !mPref.getBoolean(DECLINED_RATE, false) &&
-                        !mPref.getBoolean(APP_RATED, false) &&
-                        System.currentTimeMillis() >= (mPref.getLong(FIRST_USE, 0L) + mDaysUntilPrompt) &&
-                        mPref.getInt(USE_COUNT, 0) > mLaunchesUntilPrompt && System.currentTimeMillis() >= (mPref.getLong(REMIND_LATER_DATE, 0L) + mDaysUntilRemindAgain);
-
+        return !mPreferenceManager.getDeclinedToRate() &&
+                !mPreferenceManager.getAppRated() &&
+                System.currentTimeMillis() >= (mPreferenceManager.getFirstUsedTimestamp() + mDaysUntilPrompt) &&
+                mPreferenceManager.getUseCount() > mLaunchesUntilPrompt &&
+                System.currentTimeMillis() >= (mPreferenceManager.getRemindLaterTimeStamp() + mDaysUntilRemindAgain);
     }
 
     /**
      * <p>
      * Increments the usage count.
      * </p>
-     * <b>NOTICE:</b> This method is thread safe
      */
-    public synchronized void incrementUseCount() {
+    public void incrementUseCount() {
 
-        Editor editor = mPref.edit();
-
-
-        int trackingVersion = mPref.getInt(TRACKING_VERSION, -1);
+        int trackingVersion = mPreferenceManager.getTrackingVersion();
 
         if (trackingVersion == -1) {
             trackingVersion = mVersionCode;
-            editor.putInt(TRACKING_VERSION, trackingVersion);
+            mPreferenceManager.setTrackingVersion(trackingVersion);
         }
 
         if (trackingVersion == mVersionCode) {
 
-            if (mPref.getLong(FIRST_USE, 0L) == 0L)
-                editor.putLong(FIRST_USE, System.currentTimeMillis());
+            if (mPreferenceManager.getUseCount() == 0L) {
+                mPreferenceManager.setFirstUsedTimestamp(System.currentTimeMillis());
+            }
 
-            editor.putInt(USE_COUNT, mPref.getInt(USE_COUNT, 0) + 1);
+            mPreferenceManager.incrementUseCount();
         } else {
-            editor.putInt(TRACKING_VERSION, mVersionCode).putLong(FIRST_USE, System.currentTimeMillis()).putInt(USE_COUNT, 1)
-                    .putBoolean(DECLINED_RATE, false).putLong(REMIND_LATER_DATE, 0L).putBoolean(APP_RATED, false);
+            mPreferenceManager.resetNewVersion(mVersionCode);
         }
-
-        editor.apply();
-    }
-
-    /**
-     * Get the {@link SharedPreferences} used to save state
-     *
-     * @return The SharedPreferences
-     */
-    SharedPreferences getPreferences() {
-        return mPref;
     }
 
     /**
@@ -208,28 +130,62 @@ public class AppRater {
         });
     }
 
-    private static String ratePreferenceToString(SharedPreferences pref) {
-        JSONObject thiz = new JSONObject();
-        try {
-            thiz.put(DECLINED_RATE, pref.getBoolean(DECLINED_RATE, false));
-            thiz.put(APP_RATED, pref.getBoolean(APP_RATED, false));
-            thiz.put(TRACKING_VERSION, pref.getInt(TRACKING_VERSION, -1));
-            thiz.put(FIRST_USE, SimpleDateFormat.getDateTimeInstance().format(new Date(pref.getLong(FIRST_USE, 0L))));
-            thiz.put(USE_COUNT, pref.getInt(USE_COUNT, 0));
-            thiz.put(REMIND_LATER_DATE,
-                    SimpleDateFormat.getDateTimeInstance().format(new Date(pref.getLong(REMIND_LATER_DATE, 0L))));
-        } catch (JSONException exc) {
-            Log.e(TAG, "Error creating JSON Object", exc);
-        }
-
-        return thiz.toString();
-    }
-
     /**
      * Get the {@link SharedPreferences} file contents
      */
     @Override
+    @NonNull
     public String toString() {
-        return ratePreferenceToString(mPref);
+        return mPreferenceManager.toString();
+    }
+
+    @SuppressWarnings("unused")
+    public static final class Builder {
+
+        final Context mContext;
+        Store mStore = new GooglePlayStore();
+        int mLaunchesUntilPrompt = 5;
+        long mDaysUntilPrompt = 10 * DateUtils.DAY_IN_MILLIS;
+        long mDaysUntilRemindAgain = 5 * DateUtils.DAY_IN_MILLIS;
+        boolean mDebug = false;
+
+        public Builder(@NonNull Context context) {
+            mContext = context;
+        }
+
+        @NonNull
+        public Builder setStore(@NonNull Store store) {
+            mStore = store;
+            return this;
+        }
+
+        @NonNull
+        public Builder setLaunchesUntilPrompt(int launchesUntilPrompt) {
+            mLaunchesUntilPrompt = launchesUntilPrompt;
+            return this;
+        }
+
+        @NonNull
+        public Builder setDaysUntilPrompt(int daysUntilPrompt) {
+            mDaysUntilPrompt = daysUntilPrompt * DateUtils.DAY_IN_MILLIS;
+            return this;
+        }
+
+        @NonNull
+        public Builder setDaysUntilRemindAgain(int daysUntilRemindAgain) {
+            mDaysUntilRemindAgain = daysUntilRemindAgain * DateUtils.DAY_IN_MILLIS;
+            return this;
+        }
+
+        @NonNull
+        public Builder setDebug(boolean debug) {
+            mDebug = debug;
+            return this;
+        }
+
+        @NonNull
+        public AppRater build() {
+            return new AppRater(this);
+        }
     }
 }

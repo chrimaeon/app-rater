@@ -6,18 +6,20 @@ package com.cmgapps.android.apprater;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 
 /**
  * App Rater Dialog Activity
@@ -26,23 +28,22 @@ public class AppRaterActivity extends AppCompatActivity {
 
     public static final String EXTRA_STORE_URI = "com.cmgapps.android.apprater.extra.STORE_URI";
     private static final String TAG = "AppRaterActivity";
-    /*used by inner class*/ boolean mButtonClicked;
+    boolean mButtonClicked;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState == null) {
-            RaterFragment raterFragment = new RaterFragment();
-            raterFragment.setArguments(getIntent().getExtras());
-            raterFragment.show(getSupportFragmentManager(), "CMGAppsRaterFragment");
+            RaterFragment.newInstance(getIntent().getExtras())
+                    .show(getSupportFragmentManager(), "CMGAppsRaterFragment");
         }
     }
 
     @Override
     public void finish() {
         if (!mButtonClicked) {
-            AppRater.getInstance(this).getPreferences().edit().putLong(AppRater.REMIND_LATER_DATE, System.currentTimeMillis()).apply();
+            new PreferenceManager(this).setRemindLaterTimeStamp(System.currentTimeMillis());
         }
         super.finish();
         overridePendingTransition(0, 0);
@@ -50,22 +51,37 @@ public class AppRaterActivity extends AppCompatActivity {
 
     public static class RaterFragment extends DialogFragment {
 
+        private PreferenceManager mPreferenceManager;
+
+        static RaterFragment newInstance(Bundle extras) {
+            RaterFragment raterFragment = new RaterFragment();
+            raterFragment.setArguments(extras);
+            return raterFragment;
+        }
+
+        @Override
+        public void onCreate(@Nullable Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            mPreferenceManager = new PreferenceManager(requireContext());
+        }
+
         @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-            PackageManager pm = getContext().getPackageManager();
+            final Context context = requireContext();
+            final PackageManager pm = context.getPackageManager();
 
             String appName;
             try {
-                ApplicationInfo ai = pm.getApplicationInfo(getContext().getPackageName(), 0);
+                ApplicationInfo ai = pm.getApplicationInfo(context.getPackageName(), 0);
                 appName = (String) pm.getApplicationLabel(ai);
             } catch (PackageManager.NameNotFoundException e) {
                 Log.e(TAG, "Application name can not be found");
                 appName = "App";
             }
 
-            return new AlertDialog.Builder(getContext())
+            return new AlertDialog.Builder(context)
                     .setTitle(R.string.dialog_cmgrate_title)
                     .setMessage(getString(R.string.dialog_cmgrate_message_fmt, appName))
                     .setPositiveButton(R.string.dialog_cmgrate_ok, new DialogInterface.OnClickListener() {
@@ -77,9 +93,14 @@ public class AppRaterActivity extends AppCompatActivity {
                                 return;
                             }
 
-                            AppRater.getInstance(activity).getPreferences().edit().putBoolean(AppRater.APP_RATED, true).apply();
+                            mPreferenceManager.setAppRated(true);
                             activity.mButtonClicked = true;
-                            Uri storeUri = getArguments().getParcelable(EXTRA_STORE_URI);
+                            Uri storeUri = null;
+
+                            if (getArguments() != null) {
+                                storeUri = getArguments().getParcelable(EXTRA_STORE_URI);
+                            }
+
                             Intent intent = new Intent(Intent.ACTION_VIEW, storeUri);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
@@ -94,8 +115,7 @@ public class AppRaterActivity extends AppCompatActivity {
                             if (activity == null) {
                                 return;
                             }
-
-                            AppRater.getInstance(activity).getPreferences().edit().putLong(AppRater.REMIND_LATER_DATE, System.currentTimeMillis()).apply();
+                            mPreferenceManager.setRemindLaterTimeStamp(System.currentTimeMillis());
                             activity.mButtonClicked = true;
                             activity.finish();
                         }
@@ -108,8 +128,8 @@ public class AppRaterActivity extends AppCompatActivity {
                             if (activity == null) {
                                 return;
                             }
-                            
-                            AppRater.getInstance(activity).getPreferences().edit().putLong(AppRater.REMIND_LATER_DATE, System.currentTimeMillis()).apply();
+
+                            mPreferenceManager.setDeclinedToRate(true);
                             activity.mButtonClicked = true;
                             activity.finish();
                         }

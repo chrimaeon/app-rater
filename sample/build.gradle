@@ -5,13 +5,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.1"
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
 
     defaultConfig {
-        applicationId "com.cmgapps.android"
-        minSdkVersion 9
-        targetSdkVersion 24
+        applicationId "com.cmgapps.android.app-rater-sample"
+        minSdkVersion 19
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
     }
@@ -24,7 +24,7 @@ android {
 }
 
 dependencies {
-    compile project(':library')
-    testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:24.2.0'
+    implementation project(':library')
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    testImplementation 'junit:junit:4.12'
 }
