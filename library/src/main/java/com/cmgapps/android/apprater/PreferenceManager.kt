@@ -11,7 +11,7 @@ import androidx.core.content.edit
 import org.json.JSONException
 import org.json.JSONObject
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
 
 class PreferenceManager(context: Context) {
 
@@ -36,15 +36,15 @@ class PreferenceManager(context: Context) {
         get() = pref.getLong(REMIND_LATER_DATE, 0L)
         set(timeStamp) = pref.edit { putLong(REMIND_LATER_DATE, timeStamp) }
 
-    var trackingVersion: Int
-        get() = pref.getInt(TRACKING_VERSION, -1)
-        set(versionCode) = pref.edit { putInt(TRACKING_VERSION, versionCode) }
+    var trackingVersion: Long
+        get() = pref.getLong(TRACKING_VERSION_LONG, -1)
+        set(versionCode) = pref.edit { putLong(TRACKING_VERSION_LONG, versionCode) }
 
     fun incrementUseCount() = pref.edit { putInt(USE_COUNT, useCount + 1) }
 
-    fun resetNewVersion(versionCode: Int) {
+    fun resetNewVersion(versionCode: Long) {
         pref.edit {
-            putInt(TRACKING_VERSION, versionCode)
+            putLong(TRACKING_VERSION_LONG, versionCode)
             putLong(FIRST_USE, System.currentTimeMillis())
             putInt(USE_COUNT, 1)
             putBoolean(DECLINED_RATE, false)
@@ -58,7 +58,7 @@ class PreferenceManager(context: Context) {
             try {
                 put(DECLINED_RATE, pref.getBoolean(DECLINED_RATE, false))
                 put(APP_RATED, pref.getBoolean(APP_RATED, false))
-                put(TRACKING_VERSION, pref.getInt(TRACKING_VERSION, -1))
+                put(TRACKING_VERSION_LONG, pref.getLong(TRACKING_VERSION_LONG, -1))
                 put(FIRST_USE, SimpleDateFormat.getDateTimeInstance().format(Date(pref.getLong(FIRST_USE, 0L))))
                 put(USE_COUNT, pref.getInt(USE_COUNT, 0))
                 put(REMIND_LATER_DATE,
@@ -77,6 +77,6 @@ class PreferenceManager(context: Context) {
         private const val DECLINED_RATE = "declined_rate"
         private const val USE_COUNT = "use_count"
         private const val FIRST_USE = "first_use"
-        private const val TRACKING_VERSION = "tracking_version"
+        private const val TRACKING_VERSION_LONG = "tracking_version_long"
     }
 }

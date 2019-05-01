@@ -9,17 +9,17 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.format.DateUtils;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.cmgapps.android.apprater.store.GooglePlayStore;
 import com.cmgapps.android.apprater.store.Store;
-
-import androidx.annotation.NonNull;
 
 /**
  * <p>
@@ -43,7 +43,7 @@ public class AppRater {
     private final Store mStore;
     private final PreferenceManager mPreferenceManager;
 
-    private int mVersionCode;
+    private long mVersionCode;
 
     private AppRater(@NonNull Builder builder) {
 
@@ -52,7 +52,12 @@ public class AppRater {
         mPreferenceManager = new PreferenceManager(builder.mContext);
 
         try {
-            mVersionCode = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
+            final PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+                mVersionCode = packageInfo.versionCode;
+            } else {
+                mVersionCode = packageInfo.getLongVersionCode();
+            }
         } catch (NameNotFoundException exc) {
             mVersionCode = 0;
             Log.e(TAG, "PackageName not found: " + context.getPackageName());
@@ -92,7 +97,7 @@ public class AppRater {
      */
     public void incrementUseCount() {
 
-        int trackingVersion = mPreferenceManager.getTrackingVersion();
+        long trackingVersion = mPreferenceManager.getTrackingVersion();
 
         if (trackingVersion == -1) {
             trackingVersion = mVersionCode;
@@ -117,17 +122,10 @@ public class AppRater {
      * @param activity An {@link Activity} to show the dialog from.
      */
     public void show(@NonNull final Activity activity) {
-
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(activity, AppRaterActivity.class);
-                intent.putExtra(AppRaterActivity.EXTRA_STORE_URI, mStore.getStoreUri(activity));
-                activity.startActivity(intent);
-                activity.overridePendingTransition(0, 0);
-            }
-        });
+        Intent intent = new Intent(activity, AppRaterActivity.class);
+        intent.putExtra(AppRaterActivity.EXTRA_STORE_URI, mStore.getStoreUri(activity));
+        activity.startActivity(intent);
+        activity.overridePendingTransition(0, 0);
     }
 
     /**

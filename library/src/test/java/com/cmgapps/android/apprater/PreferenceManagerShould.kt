@@ -12,7 +12,14 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito.*
+import org.mockito.Mockito.`when`
+import org.mockito.Mockito.anyBoolean
+import org.mockito.Mockito.anyInt
+import org.mockito.Mockito.anyLong
+import org.mockito.Mockito.anyString
+import org.mockito.Mockito.eq
+import org.mockito.Mockito.verify
+import org.mockito.Mockito.verifyNoMoreInteractions
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
@@ -148,16 +155,16 @@ class PreferenceManagerShould {
 
     @Test
     fun `get tracking version with default value`() {
-        `when`(mockSharedPreferences.getInt(anyString(), anyInt()))
+        `when`(mockSharedPreferences.getLong(anyString(), anyLong()))
                 .thenAnswer { it.getArgument(1) }
-        assertThat(preferenceManager.trackingVersion, `is`(-1))
+        assertThat(preferenceManager.trackingVersion, `is`(-1L))
     }
 
     @Test
     fun `get tracking version correctly`() {
-        `when`(mockSharedPreferences.getInt(eq("tracking_version"), anyInt()))
+        `when`(mockSharedPreferences.getLong(eq("tracking_version_long"), anyLong()))
                 .thenReturn(12)
-        assertThat(preferenceManager.trackingVersion, `is`(12))
+        assertThat(preferenceManager.trackingVersion, `is`(12L))
     }
 
     @Test
@@ -165,7 +172,7 @@ class PreferenceManagerShould {
         preferenceManager.trackingVersion = 75
 
         verify(mockSharedPreferences).edit()
-        verify(mockEditor).putInt("tracking_version", 75)
+        verify(mockEditor).putLong("tracking_version_long", 75)
         verify(mockEditor).apply()
     }
 
@@ -183,7 +190,7 @@ class PreferenceManagerShould {
     fun `reset preference on new version`() {
         preferenceManager.resetNewVersion(56)
         verify(mockSharedPreferences).edit()
-        verify(mockEditor).putInt("tracking_version", 56)
+        verify(mockEditor).putLong("tracking_version_long", 56)
         verify(mockEditor).putLong(eq("first_use"), anyLong())
         verify(mockEditor).putInt("use_count", 1)
         verify(mockEditor).putBoolean("declined_rate", false)
