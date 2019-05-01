@@ -20,8 +20,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mAppRater = new AppRater.Builder(this).build();
-        mAppRater.incrementUseCount();
+
+        if (mAppRater.checkForRating()) {
+            mAppRater.show(this);
+        }
     }
+
 
     public void showDialogClicked(View v) {
         mAppRater.show(this);

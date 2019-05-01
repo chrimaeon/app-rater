@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016. Christian Grach <christian.grach@cmgapps.com
+ * Copyright (c) 2016. Christian Grach <christian.grach@cmgapps.com>
  */
 
 package com.cmgapps.android.apprater.store;
