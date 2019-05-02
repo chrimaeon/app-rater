@@ -10,7 +10,7 @@ android {
     buildToolsVersion '28.0.3'
 
     defaultConfig {
-        applicationId "com.cmgapps.android.app-rater-sample"
+        applicationId "com.cmgapps.android.appratersample"
         minSdkVersion 19
         targetSdkVersion 28
         versionCode 1
