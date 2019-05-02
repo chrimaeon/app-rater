@@ -26,8 +26,10 @@ import androidx.fragment.app.DialogFragment;
  */
 public class AppRaterActivity extends AppCompatActivity {
 
-    public static final String EXTRA_STORE_URI = "com.cmgapps.android.apprater.extra.STORE_URI";
+    static final String EXTRA_STORE_URI = "com.cmgapps.android.apprater.extra.STORE_URI";
+
     private static final String TAG = "AppRaterActivity";
+
     boolean mButtonClicked;
 
     @Override

@@ -16,6 +16,7 @@
 
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import com.jfrog.bintray.gradle.BintrayExtension
+import org.jetbrains.dokka.gradle.DokkaAndroidTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.util.Date
 import java.util.Properties
@@ -26,6 +27,7 @@ plugins {
     id("digital.wup.android-maven-publish") version "3.6.2"
     id("com.github.ben-manes.versions") version "0.20.0"
     id("com.jfrog.bintray") version "1.8.4"
+    id("org.jetbrains.dokka-android") version "0.9.18"
 }
 
 android {
@@ -61,19 +63,15 @@ tasks.withType(KotlinCompile::class).all {
 val pomName: String by project
 val versionName: String by project
 
-
-tasks.register<Javadoc>("androidJavadocs") {
-    options {
-        windowTitle = "$pomName v$versionName API"
-    }
-    source = android.sourceSets["main"].java.sourceFiles
-    classpath += files(android.getBootClasspath().joinToString(File.pathSeparator))
-    exclude("**/BuildConfig.java", "**/R.java")
+tasks.named<DokkaAndroidTask>("dokka") {
+    moduleName = "app-rater"
+    outputFormat = "javadoc"
+    outputDirectory = "$buildDir/javadoc"
 }
 
 tasks.register<Jar>("androidJavadocsJar") {
     archiveClassifier.set("javadoc")
-    from(tasks["androidJavadocs"])
+    from(tasks["dokka"])
 }
 
 tasks.register<Jar>("androidSourcesJar") {
@@ -122,6 +120,7 @@ publishing {
                         name.set(pomLicenseName)
                         val pomLicenseUrl: String by project
                         url.set(pomLicenseUrl)
+                        distribution.set("repo")
                     }
                 }
             }
@@ -135,6 +134,7 @@ bintray {
     user = credentialProps.getProperty("user")
     key = credentialProps.getProperty("key")
     setPublications("pluginMaven")
+    dryRun = true
 
     pkg(closureOf<BintrayExtension.PackageConfig> {
 

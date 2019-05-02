@@ -13,7 +13,7 @@ import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.Date
 
-class PreferenceManager(context: Context) {
+internal class PreferenceManager(context: Context) {
 
     private val pref: SharedPreferences = context.getSharedPreferences(APP_RATE_FILE_NAME, Context.MODE_PRIVATE)
 
