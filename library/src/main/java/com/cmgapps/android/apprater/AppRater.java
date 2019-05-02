@@ -151,36 +151,54 @@ public class AppRater {
             mContext = context;
         }
 
+        /**
+         * Set the store to open for rating
+         */
         @NonNull
         public Builder setStore(@NonNull Store store) {
             mStore = store;
             return this;
         }
 
+        /**
+         * Sets the minimun app lauched until the dialog is shown
+         */
         @NonNull
         public Builder setLaunchesUntilPrompt(int launchesUntilPrompt) {
             mLaunchesUntilPrompt = launchesUntilPrompt;
             return this;
         }
 
+        /**
+         * Set the minimul days to pass until the dialig is shown
+         */
         @NonNull
         public Builder setDaysUntilPrompt(int daysUntilPrompt) {
             mDaysUntilPrompt = daysUntilPrompt * DateUtils.DAY_IN_MILLIS;
             return this;
         }
 
+        /**
+         * Set the days until the dialog is shown again
+         */
         @NonNull
         public Builder setDaysUntilRemindAgain(int daysUntilRemindAgain) {
             mDaysUntilRemindAgain = daysUntilRemindAgain * DateUtils.DAY_IN_MILLIS;
             return this;
         }
 
+        /**
+         * Enables debug mode with Logcat output id the current state
+         */
         @NonNull
         public Builder setDebug(boolean debug) {
             mDebug = debug;
             return this;
         }
 
+        /**
+         * creates the App Rater instance
+         */
         @NonNull
         public AppRater build() {
             return new AppRater(this);
