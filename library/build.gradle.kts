@@ -134,7 +134,6 @@ bintray {
     user = credentialProps.getProperty("user")
     key = credentialProps.getProperty("key")
     setPublications("pluginMaven")
-    dryRun = true
 
     pkg(closureOf<BintrayExtension.PackageConfig> {
 
