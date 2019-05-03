@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Copyright (c) 2016. Christian Grach <christian.grach@cmgapps.com
+  Copyright (c) 2016. Christian Grach <christian.grach@cmgapps.com>
   -->
 
 <resources>
 
     <string name="dialog_cmgrate_title">Jetzt bewerten!</string>
     <string name="dialog_cmgrate_message_fmt">Wenn dir %1$s gefällt, nimm dir bitte einen Moment
-    Zeit für eine Bewertung.\nDanke für die Unterstützung!</string>
+    Zeit für eine Bewertung.\n\nDanke für die Unterstützung!</string>
     <string name="dialog_cmgrate_ok">Jetzt bewerten</string>
     <string name="dialog_cmgrate_later">Später erinnern</string>
     <string name="dialog_cmgrate_no">Nein, danke</string>

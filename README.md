@@ -1,48 +1,87 @@
-#[CMG Mobile Apps](http://www.cmgapps.com?utm_source=github&utm_medium=README&utm_campaign=default) Android&trade; App Rater Dialog
-[![Maven Central](https://img.shields.io/maven-central/v/com.cmgapps.android/app-rater.svg)](https://oss.sonatype.org/content/repositories/releases/com/cmgapps/android/app-rater/)
-[![Bintray](https://img.shields.io/bintray/v/bintray/jcenter/com.cmgapps.android:app-rater.svg)](https://jcenter.bintray.com/com/cmgapps/android/cmgUtilities/)
+# Android&trade; App Rater Dialog
+
+[![License](https://img.shields.io/badge/license-Apache%202.0-brightgreen.svg?style=for-the-badge&logo=apache)](http://www.apache.org/licenses/LICENSE-2.0)
+[![Bintray](https://img.shields.io/bintray/v/chrimaeon/maven/com.cmgapps.android:app-rater.svg?style=for-the-badge)](https://jcenter.bintray.com/com/cmgapps/android/cmgUtilities/)
 
 This is a App Rater Dialog to encourage user to rate the app on the Google Play Store&trade;
 
 It is used in my Android&trade; Projects:
 
 * [Bierdeckel][1]
+* [Numerals Converter][4]
 * [PhoNews][2]
 * [PhoNews Pro][3]
-* [Roman Numerals Converter][4]
 * [Running Sushi][5]
 
-Gradle
-------
+## Usage
 
- Add the following dependency to your `build.gradle`.
+Add the following dependency to your `build.gradle`.
 
-    dependencies {
-        compile 'com.cmgapps.android:app-rater:0.4'
+```groovy
+dependencies {
+    implementation 'com.cmgapps.android:app-rater:<version>'
+}
+```
+
+Extend the `Application` class and register a `LifecycleObserver`
+
+```kotlin
+import android.app.Application
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.ProcessLifecycleOwner
+import com.cmgapps.android.apprater.AppRater
+
+class SampleApp : Application() {
+
+    override fun onCreate() {
+        super.onCreate()
+        val appRater = AppRater.Builder(this).build()
+        ProcessLifecycleOwner.get().lifecycle.addObserver(AppLifecycleListener(apprater))
+
     }
+}
 
-Developed By
-------------
+class AppLifecycleListener(private val appRater: AppRater) : LifecycleObserver {
 
-* Christian Grach - <christian.grach@cmgapps.com>
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    fun onAppForeground() {
+        appRater.incrementUseCount()
+    }
+}
+```
+and in your main `Activity#onCreate` check if requirements for rating are met and show the dialog
 
-License
--------
+```koltin
+override fun onCreate(savedInstanceState: Bundle) {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.activity_main)
+    val appRater = AppRater.Builder(this).build()
 
-    Copyright 2016 Christian Grach
+    if (mAppRater.checkForRating()) {
+        mAppRater.show(this)
+    }
+}
+``` 
 
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
+## License
 
-         http://www.apache.org/licenses/LICENSE-2.0
+```text
+Copyright 2016-2019 Christian Grach
+    
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
+     http://www.apache.org/licenses/LICENSE-2.0
 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```
 *Android is a trademark of Google Inc.*
 
  [1]: https://play.google.com/store/apps/details?id=com.cmgapps.android.bierdeckel&referrer=utm_source%3Dgithub%26utm_medium%3DREADME
