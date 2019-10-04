@@ -16,11 +16,11 @@
 
 object Deps {
     object Versions {
-        const val COMPILE_SDK_VERSION = 28
-        const val BUILD_TOOLS_VERSION = "28.0.3"
+        const val COMPILE_SDK_VERSION = 29
+        const val BUILD_TOOLS_VERSION = "29.0.2"
         const val TARGET_SDK_VERSION = COMPILE_SDK_VERSION
 
-        const val KOTLIN = "1.3.31"
+        const val KOTLIN = "1.3.50"
         const val APP_COMPAT = "1.0.2"
         const val CORE_KTX = "1.0.1"
         const val LIFECYCLE_EXT = "2.0.0"

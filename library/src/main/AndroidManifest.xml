@@ -2,14 +2,6 @@
   Copyright (c) 2016. Christian Grach <christian.grach@cmgapps.com>
   -->
 
-<manifest
-    package="com.cmgapps.android.apprater"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest package="com.cmgapps.android.apprater">
 
-    <application>
-        <activity
-            android:name=".AppRaterActivity"
-            android:launchMode="singleInstance"
-            android:theme="@style/CMGAppRaterActivity" />
-    </application>
 </manifest>

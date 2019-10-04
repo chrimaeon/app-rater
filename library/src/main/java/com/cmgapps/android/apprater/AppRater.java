@@ -5,33 +5,23 @@
 package com.cmgapps.android.apprater;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build;
-import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 
 import com.cmgapps.android.apprater.store.GooglePlayStore;
 import com.cmgapps.android.apprater.store.Store;
 
-/**
- * <p>
- * Class that utilizes usage count and time to open a rate dialog.
- * </p>
- * <p>
- * Use {@link #incrementUseCount()} on your main activity
- * {@link Activity#onCreate(Bundle)} implementation.
- * </p>
- * Then call {@link #checkForRating()} to check if the requirements are met to
- * show the dialog and finally call {@link #show(Activity)} to show the rating dialog
- */
 public class AppRater {
 
     private static final String TAG = "AppRater";
@@ -122,10 +112,31 @@ public class AppRater {
      * @param activity An {@link Activity} to show the dialog from.
      */
     public void show(@NonNull final Activity activity) {
-        Intent intent = new Intent(activity, AppRaterActivity.class);
-        intent.putExtra(AppRaterActivity.EXTRA_STORE_URI, mStore.getStoreUri(activity));
-        activity.startActivity(intent);
-        activity.overridePendingTransition(0, 0);
+        final PackageManager pm = activity.getPackageManager();
+
+        String appName;
+        try {
+            ApplicationInfo ai = pm.getApplicationInfo(activity.getPackageName(), 0);
+            appName = (String) pm.getApplicationLabel(ai);
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.e(TAG, "Application name can not be found");
+            appName = "App";
+        }
+
+        new AlertDialog.Builder(activity)
+                .setTitle(R.string.dialog_cmgrate_title)
+                .setMessage(activity.getString(R.string.dialog_cmgrate_message_fmt, appName))
+                .setPositiveButton(R.string.dialog_cmgrate_ok, (dialog, which) -> {
+                    mPreferenceManager.setAppRated(true);
+
+                    Intent intent = new Intent(Intent.ACTION_VIEW, mStore.getStoreUri(activity));
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    activity.startActivity(intent);
+                })
+                .setNeutralButton(R.string.dialog_cmgrate_later, (dialog, which) -> mPreferenceManager.setRemindLaterTimeStamp(System.currentTimeMillis()))
+                .setNegativeButton(R.string.dialog_cmgrate_no, (dialog, which) -> mPreferenceManager.setDeclinedToRate(true))
+                .setOnCancelListener(dialog -> mPreferenceManager.setRemindLaterTimeStamp(System.currentTimeMillis()))
+                .show();
     }
 
     /**
