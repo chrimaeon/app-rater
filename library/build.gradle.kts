@@ -25,7 +25,7 @@ plugins {
     id("com.android.library")
     kotlin("android")
     id("digital.wup.android-maven-publish") version "3.6.2"
-    id("com.github.ben-manes.versions") version "0.20.0"
+    id("com.github.ben-manes.versions") version "0.25.0"
     id("com.jfrog.bintray") version "1.8.4"
     id("org.jetbrains.dokka-android") version "0.9.18"
 }

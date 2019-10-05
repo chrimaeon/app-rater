@@ -1,7 +1,7 @@
 # Android&trade; App Rater Dialog
 
 [![License](https://img.shields.io/badge/license-Apache%202.0-brightgreen.svg?style=for-the-badge&logo=apache)](http://www.apache.org/licenses/LICENSE-2.0)
-[![Bintray](https://img.shields.io/bintray/v/chrimaeon/maven/com.cmgapps.android:app-rater.svg?style=for-the-badge)](https://jcenter.bintray.com/com/cmgapps/android/cmgUtilities/)
+[![Bintray](https://www.cmgapps.com/badge/chrimaeon/maven/com.cmgapps.android:app-rater/badge.svg)](https://jcenter.bintray.com/com/cmgapps/android/cmgUtilities/)
 
 This is a App Rater Dialog to encourage user to rate the app on the Google Play Store&trade;
 

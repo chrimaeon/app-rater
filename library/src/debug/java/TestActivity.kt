@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016. Christian Grach <christian.grach@cmgapps.com>
+ * Copyright (c) 2019. Christian Grach <christian.grach@cmgapps.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,8 @@
  * limitations under the License.
  */
 
-package com.cmgapps.android.apprater.store;
+package com.cmgapps.android.apprater.testing
 
-import android.content.Context;
-import android.net.Uri;
+import androidx.appcompat.app.AppCompatActivity
 
-import androidx.annotation.NonNull;
-
-/**
- * The Amazon Store
- */
-public class AmazonStore implements Store {
-
-    private static final String STORE_URL = "http://www.amazon.com/gp/mas/dl/android?p=";
-
-
-    @Override
-    public Uri getStoreUri(@NonNull Context context) {
-        return Uri.parse(STORE_URL + context.getPackageName());
-    }
-}
+class TestActivity : AppCompatActivity()
