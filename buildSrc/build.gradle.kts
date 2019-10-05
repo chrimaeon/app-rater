@@ -23,5 +23,5 @@ repositories {
 }
 
 dependencies {
-    implementation(kotlin("stdlib-jdk8", "1.3.31"))
+    implementation(kotlin("stdlib-jdk8", "1.3.50"))
 }

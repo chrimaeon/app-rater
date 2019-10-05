@@ -5,15 +5,10 @@
 package com.cmgapps.android
 
 import android.app.Application
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.cmgapps.android.apprater.AppRater
-
-/*
- * Copyright (c) 2019. Christian Grach <christian.grach@cmgapps.com>
- */
 
 class SampleApp : Application() {
 
@@ -25,10 +20,9 @@ class SampleApp : Application() {
     }
 }
 
-class AppLifecycleListener(private val appRater: AppRater) : LifecycleObserver {
+class AppLifecycleListener(private val appRater: AppRater) : DefaultLifecycleObserver {
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_START)
-    fun onAppForeground() {
+    override fun onStart(owner: LifecycleOwner) {
         appRater.incrementUseCount()
     }
 }

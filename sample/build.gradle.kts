@@ -48,5 +48,6 @@ dependencies {
     implementation("androidx.appcompat:appcompat:${Deps.Versions.APP_COMPAT}")
     implementation("androidx.core:core-ktx:${Deps.Versions.CORE_KTX}")
     implementation("androidx.lifecycle:lifecycle-extensions:${Deps.Versions.LIFECYCLE_EXT}")
+    implementation("androidx.lifecycle:lifecycle-common-java8:${Deps.Versions.LIFECYCLE_COMMON}")
     implementation(kotlin("stdlib-jdk7", Deps.Versions.KOTLIN))
 }
