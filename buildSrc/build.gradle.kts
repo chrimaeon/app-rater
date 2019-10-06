@@ -19,9 +19,13 @@ plugins {
 }
 
 repositories {
+    google()
     jcenter()
 }
 
 dependencies {
     implementation(kotlin("stdlib-jdk8", "1.3.50"))
+    implementation("com.android.tools.build:gradle:3.5.1")
+    implementation("digital.wup:android-maven-publish:3.6.2")
+    implementation("com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4")
 }

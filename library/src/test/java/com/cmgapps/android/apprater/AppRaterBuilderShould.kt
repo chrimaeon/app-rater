@@ -44,33 +44,33 @@ class AppRaterBuilderShould {
     @Test
     fun `set store`() {
         val store = mock(Store::class.java)
-        builder.setStore(store)
+        builder.store(store)
 
-        assertThat(builder.mStore, `is`(store))
+        assertThat(builder._store, `is`(store))
     }
 
     @Test
     fun `set launches until prompt`() {
-        builder.setLaunchesUntilPrompt(200)
-        assertThat(builder.mLaunchesUntilPrompt, `is`(200))
+        builder.launchesUntilPrompt(200)
+        assertThat(builder._launchesUntilPrompt, `is`(200))
     }
 
     @Test
     fun `set days until prompt`() {
-        builder.setDaysUntilPrompt(50)
-        assertThat(builder.mDaysUntilPrompt, `is`(50 * DateUtils.DAY_IN_MILLIS))
+        builder.daysUntilPrompt(50)
+        assertThat(builder._daysUntilPrompt, `is`(50 * DateUtils.DAY_IN_MILLIS))
     }
 
     @Test
     fun `set days until remind again`() {
-        builder.setDaysUntilRemindAgain(20)
-        assertThat(builder.mDaysUntilRemindAgain, `is`(20 * DateUtils.DAY_IN_MILLIS))
+        builder.daysUntilRemindAgain(20)
+        assertThat(builder._daysUntilRemindAgain, `is`(20 * DateUtils.DAY_IN_MILLIS))
     }
 
 
     @Test
     fun `set debug mode`() {
-        builder.setDebug(true)
-        assertThat(builder.mDebug, `is`(true))
+        builder.debug(true)
+        assertThat(builder._debug, `is`(true))
     }
 }

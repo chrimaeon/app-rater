@@ -26,25 +26,6 @@ plugins {
 android {
     compileSdkVersion(Deps.Versions.COMPILE_SDK_VERSION)
     buildToolsVersion(Deps.Versions.BUILD_TOOLS_VERSION)
-
-    defaultConfig {
-        minSdkVersion(14)
-        targetSdkVersion(Deps.Versions.TARGET_SDK_VERSION)
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
-
-    buildTypes {
-        named("release") {
-            isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
-        }
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
 }
 
 tasks.withType(KotlinCompile::class).all {
@@ -53,9 +34,8 @@ tasks.withType(KotlinCompile::class).all {
     }
 }
 
-
-tasks.named<DokkaAndroidTask>("dokka") {
-    moduleName = "app-rater-ktx"
+tasks.withType<DokkaAndroidTask>() {
+    moduleName = "app-rater"
     outputFormat = "javadoc"
     outputDirectory = "$buildDir/javadoc"
 }
@@ -73,16 +53,7 @@ tasks.register<Jar>("androidSourcesJar") {
 apply(plugin = "bintray-publish")
 
 dependencies {
-    implementation("androidx.appcompat:appcompat:${Deps.Versions.APP_COMPAT}")
-    api("androidx.core:core-ktx:${Deps.Versions.CORE_KTX}")
-    api(kotlin("stdlib-jdk7", Deps.Versions.KOTLIN))
-
-    testImplementation("junit:junit:${Deps.Versions.JUNIT}")
-    testImplementation("androidx.test:core:${Deps.Versions.TEST_CORE}")
-    testImplementation("org.mockito:mockito-core:${Deps.Versions.MOCKITO_CORE}")
-    testImplementation("org.hamcrest:hamcrest:${Deps.Versions.HAMCREST}")
-
-    androidTestImplementation("androidx.test:runner:${Deps.Versions.TEST_RUNNER}")
-    androidTestImplementation("androidx.test.ext:junit-ktx:${Deps.Versions.JUNIT_KTX}")
-    androidTestImplementation("androidx.test.espresso:espresso-core:${Deps.Versions.ESPRESSO_CORE}")
+    api(project(":library"))
+    implementation(kotlin("stdlib-jdk7", Deps.Versions.KOTLIN))
 }
+

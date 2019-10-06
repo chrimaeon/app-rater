@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019. Christian Grach <christian.grach@cmgapps.com>
+ * Copyright (c) 2016. Christian Grach <christian.grach@cmgapps.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,5 +14,15 @@
  * limitations under the License.
  */
 
-rootProject.name = "app-rater"
-include(":sample", ":library", ":library-ktx")
+package com.cmgapps.android.apprater.store
+
+import android.content.Context
+import android.net.Uri
+
+/**
+ * The Google Play Store
+ */
+class GooglePlayStore : Store {
+    override fun getStoreUri(context: Context): Uri =
+        Uri.parse("market://details?id=" + context.packageName)
+}

@@ -45,6 +45,7 @@ android {
 
 dependencies {
     implementation(project(":library"))
+    implementation(project(":library-ktx"))
     implementation("androidx.appcompat:appcompat:${Deps.Versions.APP_COMPAT}")
     implementation("androidx.core:core-ktx:${Deps.Versions.CORE_KTX}")
     implementation("androidx.lifecycle:lifecycle-extensions:${Deps.Versions.LIFECYCLE_EXT}")

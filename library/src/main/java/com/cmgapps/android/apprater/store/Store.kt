@@ -14,23 +14,19 @@
  * limitations under the License.
  */
 
-package com.cmgapps.android.apprater.store;
+package com.cmgapps.android.apprater.store
 
-import android.content.Context;
-import android.net.Uri;
-
-import androidx.annotation.NonNull;
+import android.content.Context
+import android.net.Uri
 
 /**
- * The Amazon Store
+ * A Store to open for rating
  */
-public class AmazonStore implements Store {
+interface Store {
 
-    private static final String STORE_URL = "http://www.amazon.com/gp/mas/dl/android?p=";
-
-
-    @Override
-    public Uri getStoreUri(@NonNull Context context) {
-        return Uri.parse(STORE_URL + context.getPackageName());
-    }
+    /**
+     * @param context the application context
+     * @return the store uri to open for rating
+     */
+    fun getStoreUri(context: Context): Uri
 }

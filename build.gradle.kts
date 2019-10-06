@@ -1,3 +1,5 @@
+import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
+
 /*
  * Copyright (c) 2019. Christian Grach <christian.grach@cmgapps.com>
  *
@@ -27,6 +29,10 @@ buildscript {
     }
 }
 
+plugins {
+    id("com.github.ben-manes.versions") version "0.25.0"
+}
+
 allprojects {
     repositories {
         jcenter()
@@ -35,6 +41,17 @@ allprojects {
     }
 }
 
-tasks.create<Delete>("clean") {
-    delete(rootProject.buildDir)
+tasks {
+    withType<DependencyUpdatesTask> {
+        revision = "release"
+        rejectVersionIf {
+            listOf("alpha", "beta", "rc", "cr", "m", "preview", "b", "ea").any { qualifier ->
+                candidate.version.matches(Regex("(?i).*[.-]$qualifier[.\\d-+]*"))
+            }
+        }
+    }
+
+    register<Delete>("clean") {
+        delete(rootProject.buildDir)
+    }
 }

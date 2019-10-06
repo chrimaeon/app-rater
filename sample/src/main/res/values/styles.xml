@@ -10,11 +10,6 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="alertDialogTheme">@style/RaterDialog</item>
-    </style>
-
-    <style name="RaterDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="colorAccent">#FF00FF</item>
     </style>
 
 </resources>

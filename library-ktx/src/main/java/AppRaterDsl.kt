@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016. Christian Grach <christian.grach@cmgapps.com>
+ * Copyright (c) 2019. Christian Grach <christian.grach@cmgapps.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,22 +14,16 @@
  * limitations under the License.
  */
 
-package com.cmgapps.android.apprater.store;
+package com.cmgapps.android.apprater
 
-import android.content.Context;
-import android.net.Uri;
+import android.content.Context
 
-import androidx.annotation.NonNull;
 
-/**
- * The Google Play Store
- */
-public class GooglePlayStore implements Store {
+@DslMarker
+annotation class AppRaterDsl
 
-    private static final String STORE_URI = "market://details?id=";
+@AppRaterDsl
+class AppRaterBuilder(context: Context) : AppRater.Builder(context)
 
-    @Override
-    public Uri getStoreUri(@NonNull Context context) {
-        return Uri.parse(STORE_URI + context.getPackageName());
-    }
-}
+inline fun appRater(context: Context, buildAppRater: AppRaterBuilder.() -> Unit = {}) =
+    AppRaterBuilder(context).apply(buildAppRater).build()

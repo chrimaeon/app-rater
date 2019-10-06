@@ -9,13 +9,20 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.cmgapps.android.apprater.AppRater
+import com.cmgapps.android.apprater.appRater
 
 class SampleApp : Application() {
 
+    lateinit var appRater: AppRater
+        private set
+
     override fun onCreate() {
+        appRater = appRater(this) {
+            debug(true)
+            daysUntilPrompt(5)
+        }
         super.onCreate()
-        val apprater = AppRater.Builder(this).build()
-        ProcessLifecycleOwner.get().lifecycle.addObserver(AppLifecycleListener(apprater))
+        ProcessLifecycleOwner.get().lifecycle.addObserver(AppLifecycleListener(appRater))
 
     }
 }
