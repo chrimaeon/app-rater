@@ -78,7 +78,7 @@ internal class PreferenceManager(context: Context) {
             } catch (exc: JSONException) {
                 Log.e("PreferenceManager", "Error creating JSON Object ", exc)
             }
-        }.toString()
+        }.toString(2)
 
     }
 

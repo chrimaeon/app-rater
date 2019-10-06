@@ -17,13 +17,16 @@ class SampleApp : Application() {
         private set
 
     override fun onCreate() {
-        appRater = appRater(this) {
-            debug(true)
-            daysUntilPrompt(5)
-        }
         super.onCreate()
-        ProcessLifecycleOwner.get().lifecycle.addObserver(AppLifecycleListener(appRater))
+        appRater = appRater(this) {
+            if (BuildConfig.DEBUG) {
+                debug(true)
+            }
+            daysUntilPrompt(0)
+            launchesUntilPrompt(0)
 
+        }
+        ProcessLifecycleOwner.get().lifecycle.addObserver(AppLifecycleListener(appRater))
     }
 }
 
