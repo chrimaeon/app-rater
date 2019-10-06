@@ -21,6 +21,7 @@ plugins {
     id("com.android.library")
     kotlin("android")
     id("org.jetbrains.dokka-android") version "0.9.18"
+    id("bintray-publish")
 }
 
 android {
@@ -49,8 +50,6 @@ tasks.register<Jar>("androidSourcesJar") {
     archiveClassifier.set("sources")
     from(android.sourceSets["main"].java.srcDirs)
 }
-
-apply(plugin = "bintray-publish")
 
 dependencies {
     api(project(":library"))

@@ -106,6 +106,7 @@ fun Project.bintrayPublishConvention() {
     }
 }
 
-bintrayPublishConvention()
-
+afterEvaluate {
+    bintrayPublishConvention()
+}
 
