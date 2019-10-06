@@ -20,17 +20,7 @@ import digital.wup.android_maven_publish.AndroidMavenPublishPlugin
 import java.util.Date
 import java.util.Properties
 
-val pomName: String by project
-val versionName: String by project
-project.version = versionName
-
-val group: String by project
-project.group = group
-
-val pomArtifactId: String by project
-val pomDesc: String by project
-
-fun Project.bintrayPublishConvention() {
+fun Project.bintrayPublishConvention(pomName: String, pomDesc: String, pomArtifactId: String) {
     apply<AndroidMavenPublishPlugin>()
 
     configure<PublishingExtension> {
@@ -97,8 +87,8 @@ fun Project.bintrayPublishConvention() {
             issueTrackerUrl = issuesTrackerUrl
             githubRepo = projectUrl
             version(closureOf<BintrayExtension.VersionConfig> {
-                name = versionName
-                vcsTag = versionName
+                name = project.version as String
+                vcsTag = project.version as String
                 released = Date().toString()
             })
         })
@@ -107,6 +97,15 @@ fun Project.bintrayPublishConvention() {
 }
 
 afterEvaluate {
-    bintrayPublishConvention()
-}
+    val versionName: String by project
+    project.version = versionName
 
+    val group: String by project
+    project.group = group
+
+    val pomName: String by project
+    val pomDesc: String by project
+    val pomArtifactId: String by project
+
+    bintrayPublishConvention(pomName, pomDesc, pomArtifactId)
+}
