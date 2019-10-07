@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
+    @Suppress("UNUSED_PARAMETER")
     fun showDialogClicked(v: View) {
         appRater.show(this)
     }
@@ -35,6 +35,4 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private val TAG = "MainActivity"
     }
-
-
 }

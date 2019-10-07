@@ -24,7 +24,6 @@ class SampleApp : Application() {
             }
             daysUntilPrompt(0)
             launchesUntilPrompt(0)
-
         }
         ProcessLifecycleOwner.get().lifecycle.addObserver(AppLifecycleListener(appRater))
     }

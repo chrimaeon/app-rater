@@ -27,7 +27,8 @@ import java.util.Date
 
 internal class PreferenceManager(context: Context) {
 
-    private val pref: SharedPreferences = context.getSharedPreferences(APP_RATE_FILE_NAME, Context.MODE_PRIVATE)
+    private val pref: SharedPreferences =
+        context.getSharedPreferences(APP_RATE_FILE_NAME, Context.MODE_PRIVATE)
 
     var declinedToRate: Boolean
         get() = pref.getBoolean(DECLINED_RATE, false)
@@ -71,15 +72,26 @@ internal class PreferenceManager(context: Context) {
                 put(DECLINED_RATE, pref.getBoolean(DECLINED_RATE, false))
                 put(APP_RATED, pref.getBoolean(APP_RATED, false))
                 put(TRACKING_VERSION_LONG, pref.getLong(TRACKING_VERSION_LONG, -1))
-                put(FIRST_USE, SimpleDateFormat.getDateTimeInstance().format(Date(pref.getLong(FIRST_USE, 0L))))
+                put(
+                    FIRST_USE,
+                    SimpleDateFormat.getDateTimeInstance().format(Date(pref.getLong(FIRST_USE, 0L)))
+                )
                 put(USE_COUNT, pref.getInt(USE_COUNT, 0))
-                put(REMIND_LATER_DATE,
-                        SimpleDateFormat.getDateTimeInstance().format(Date(pref.getLong(REMIND_LATER_DATE, 0L))))
+                put(
+                    REMIND_LATER_DATE,
+                    SimpleDateFormat.getDateTimeInstance().format(
+                        Date(
+                            pref.getLong(
+                                REMIND_LATER_DATE,
+                                0L
+                            )
+                        )
+                    )
+                )
             } catch (exc: JSONException) {
                 Log.e("PreferenceManager", "Error creating JSON Object ", exc)
             }
         }.toString(2)
-
     }
 
     companion object {

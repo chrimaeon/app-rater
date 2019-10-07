@@ -18,7 +18,6 @@ package com.cmgapps.android.apprater
 
 import android.content.Context
 
-
 @DslMarker
 annotation class AppRaterDsl
 

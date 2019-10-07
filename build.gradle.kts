@@ -41,6 +41,37 @@ allprojects {
     }
 }
 
+
+subprojects {
+    val ktlint by configurations.creating
+
+    tasks {
+        val ktlint by registering(JavaExec::class) {
+            group = "Verification"
+            description = "Check Kotlin code style."
+            main = "com.pinterest.ktlint.Main"
+            classpath = ktlint
+            args = listOf(
+                "src/**/*.kt",
+                "--reporter=plain",
+                "--reporter=checkstyle,output=${buildDir}/reports/ktlint.xml"
+            )
+
+        }
+
+        afterEvaluate {
+            named("check") {
+                dependsOn(ktlint)
+            }
+        }
+    }
+
+    dependencies {
+        ktlint("com.pinterest:ktlint:0.34.2")
+    }
+
+}
+
 tasks {
     withType<DependencyUpdatesTask> {
         revision = "release"
@@ -55,3 +86,5 @@ tasks {
         delete(rootProject.buildDir)
     }
 }
+
+

@@ -67,7 +67,6 @@ class AppRaterBuilderShould {
         assertThat(builder._daysUntilRemindAgain, `is`(20 * DateUtils.DAY_IN_MILLIS))
     }
 
-
     @Test
     fun `set debug mode`() {
         builder.debug(true)

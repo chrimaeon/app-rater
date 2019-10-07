@@ -42,14 +42,13 @@ class AppRaterUiShould {
         }
 
         onView(withText("Rate now!"))
-                .check(matches(isDisplayed()))
+            .check(matches(isDisplayed()))
         onView(withText(containsString("If you enjoy using")))
         onView(withText("Rate now"))
-                .check(matches(isDisplayed()))
+            .check(matches(isDisplayed()))
         onView(withText("Remind me later"))
-                .check(matches(isDisplayed()))
+            .check(matches(isDisplayed()))
         onView(withText("No, thanks"))
-                .check(matches(isDisplayed()))
-
+            .check(matches(isDisplayed()))
     }
 }

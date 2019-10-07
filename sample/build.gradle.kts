@@ -27,10 +27,12 @@ android {
 
     defaultConfig {
         applicationId = "com.cmgapps.android.appratersample"
-        minSdkVersion(19)
+        minSdkVersion(21)
         targetSdkVersion(Deps.Versions.TARGET_SDK_VERSION)
         versionCode = 1
         versionName = "1.0"
+
+        resConfigs("en")
     }
     buildTypes {
         named("release") {

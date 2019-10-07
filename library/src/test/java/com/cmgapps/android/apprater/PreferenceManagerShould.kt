@@ -51,10 +51,10 @@ class PreferenceManagerShould {
     @Before
     fun setup() {
         `when`(mockContext.getSharedPreferences(anyString(), anyInt()))
-                .thenReturn(mockSharedPreferences)
+            .thenReturn(mockSharedPreferences)
 
         `when`(mockSharedPreferences.edit())
-                .thenReturn(mockEditor)
+            .thenReturn(mockEditor)
 
         preferenceManager = PreferenceManager(mockContext)
     }
@@ -62,14 +62,14 @@ class PreferenceManagerShould {
     @Test
     fun `get declined to rate with default value`() {
         `when`(mockSharedPreferences.getBoolean(anyString(), anyBoolean()))
-                .thenAnswer { it.getArgument(1) }
+            .thenAnswer { it.getArgument(1) }
         assertThat(preferenceManager.declinedToRate, `is`(false))
     }
 
     @Test
     fun `get declined to rate correctly`() {
         `when`(mockSharedPreferences.getBoolean(eq("declined_rate"), anyBoolean()))
-                .thenReturn(true)
+            .thenReturn(true)
         assertThat(preferenceManager.declinedToRate, `is`(true))
     }
 
@@ -85,14 +85,14 @@ class PreferenceManagerShould {
     @Test
     fun `get app rated with default value`() {
         `when`(mockSharedPreferences.getBoolean(anyString(), anyBoolean()))
-                .thenAnswer { it.getArgument(1) }
+            .thenAnswer { it.getArgument(1) }
         assertThat(preferenceManager.appRated, `is`(false))
     }
 
     @Test
     fun `get app rated correctly`() {
         `when`(mockSharedPreferences.getBoolean(eq("rated"), anyBoolean()))
-                .thenReturn(true)
+            .thenReturn(true)
         assertThat(preferenceManager.appRated, `is`(true))
     }
 
@@ -108,14 +108,14 @@ class PreferenceManagerShould {
     @Test
     fun `get first time used with default value`() {
         `when`(mockSharedPreferences.getLong(anyString(), anyLong()))
-                .thenAnswer { it.getArgument(1) }
+            .thenAnswer { it.getArgument(1) }
         assertThat(preferenceManager.firstUsedTimestamp, `is`(0L))
     }
 
     @Test
     fun `get first time used correctly`() {
         `when`(mockSharedPreferences.getLong(eq("first_use"), anyLong()))
-                .thenReturn(123456L)
+            .thenReturn(123456L)
         assertThat(preferenceManager.firstUsedTimestamp, `is`(123456L))
     }
 
@@ -131,28 +131,28 @@ class PreferenceManagerShould {
     @Test
     fun `get use count with default value`() {
         `when`(mockSharedPreferences.getInt(anyString(), anyInt()))
-                .thenAnswer { it.getArgument(1) }
+            .thenAnswer { it.getArgument(1) }
         assertThat(preferenceManager.useCount, `is`(0))
     }
 
     @Test
     fun `get use count correctly`() {
         `when`(mockSharedPreferences.getInt(eq("use_count"), anyInt()))
-                .thenReturn(4567)
+            .thenReturn(4567)
         assertThat(preferenceManager.useCount, `is`(4567))
     }
 
     @Test
     fun `get remind later timestamp with default value`() {
         `when`(mockSharedPreferences.getLong(anyString(), anyLong()))
-                .thenAnswer { it.getArgument(1) }
+            .thenAnswer { it.getArgument(1) }
         assertThat(preferenceManager.remindLaterTimeStamp, `is`(0L))
     }
 
     @Test
     fun `get remind later timestamp correctly`() {
         `when`(mockSharedPreferences.getLong(eq("remind_later_date"), anyLong()))
-                .thenReturn(56L)
+            .thenReturn(56L)
         assertThat(preferenceManager.remindLaterTimeStamp, `is`(56L))
     }
 
@@ -168,14 +168,14 @@ class PreferenceManagerShould {
     @Test
     fun `get tracking version with default value`() {
         `when`(mockSharedPreferences.getLong(anyString(), anyLong()))
-                .thenAnswer { it.getArgument(1) }
+            .thenAnswer { it.getArgument(1) }
         assertThat(preferenceManager.trackingVersion, `is`(-1L))
     }
 
     @Test
     fun `get tracking version correctly`() {
         `when`(mockSharedPreferences.getLong(eq("tracking_version_long"), anyLong()))
-                .thenReturn(12)
+            .thenReturn(12)
         assertThat(preferenceManager.trackingVersion, `is`(12L))
     }
 
@@ -191,7 +191,7 @@ class PreferenceManagerShould {
     @Test
     fun `increment use count sets correct preference`() {
         `when`(mockSharedPreferences.getInt(eq("use_count"), anyInt()))
-                .thenReturn(3)
+            .thenReturn(3)
         preferenceManager.incrementUseCount()
         verify(mockSharedPreferences).edit()
         verify(mockEditor).putInt("use_count", 4)
@@ -211,5 +211,4 @@ class PreferenceManagerShould {
         verify(mockEditor).apply()
         verifyNoMoreInteractions(mockEditor)
     }
-
 }
