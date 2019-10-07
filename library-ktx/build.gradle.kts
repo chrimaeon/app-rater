@@ -27,6 +27,10 @@ plugins {
 android {
     compileSdkVersion(Deps.Versions.COMPILE_SDK_VERSION)
     buildToolsVersion(Deps.Versions.BUILD_TOOLS_VERSION)
+
+    defaultConfig {
+        minSdkVersion(Deps.Versions.MIN_SDK_VERSION)
+    }
 }
 
 tasks.withType(KotlinCompile::class).all {

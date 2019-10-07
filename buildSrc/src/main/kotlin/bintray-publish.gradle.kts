@@ -67,8 +67,13 @@ fun Project.bintrayPublishConvention(pomName: String, pomDesc: String, pomArtifa
     apply<BintrayPlugin>()
 
     configure<BintrayExtension> {
-        val credentialProps = Properties()
-        credentialProps.load(rootProject.file("credentials.properties").inputStream())
+        val credentialProps = Properties().apply {
+            val propsFile = rootProject.file("credentials.properties")
+            if (propsFile.exists()) {
+                load(propsFile.inputStream())
+            }
+        }
+
         user = credentialProps.getProperty("user")
         key = credentialProps.getProperty("key")
         setPublications("pluginMaven")

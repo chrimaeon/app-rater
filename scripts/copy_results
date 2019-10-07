@@ -1,0 +1,19 @@
+#!/usr/bin/env python
+
+import glob, re, os, shutil
+
+LINT_RESULTS_DIR = "ci_results/lint/"
+os.makedirs(LINT_RESULTS_DIR)
+
+for filename in glob.glob('**/build/reports/*.*'):
+    new_name = re.sub(r'(.*)/build/reports/(.*)\.(.*)', r'\1/build/reports/\2-\1.\3', filename)
+    os.rename(filename, new_name)
+    shutil.move(new_name, LINT_RESULTS_DIR)
+
+TEST_RESULTS_DIR = "ci_results/test/"
+#os.makedirs(TEST_RESULTS_DIR)
+
+for filename in glob.glob('**/build/test-results'):
+    match = re.match(r'(.+)/build/test-results', filename)
+    shutil.move(filename, TEST_RESULTS_DIR + '/' + match.group(1))
+

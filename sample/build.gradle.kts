@@ -54,7 +54,6 @@ tasks.withType<KotlinCompile> {
 }
 
 dependencies {
-    implementation(project(":library"))
     implementation(project(":library-ktx"))
     implementation("androidx.appcompat:appcompat:${Deps.Versions.APP_COMPAT}")
     implementation("androidx.core:core-ktx:${Deps.Versions.CORE_KTX}")
