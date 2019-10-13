@@ -2,6 +2,7 @@
 
 [![License](https://img.shields.io/badge/license-Apache%202.0-brightgreen.svg?style=for-the-badge&logo=apache)](http://www.apache.org/licenses/LICENSE-2.0)
 [![Bintray](https://www.cmgapps.com/badge/chrimaeon/maven/com.cmgapps.android:app-rater/badge.svg)](https://jcenter.bintray.com/com/cmgapps/android/cmgUtilities/)
+[![CircleCI](https://circleci.com/gh/chrimaeon/app-rater.svg?style=svg)](https://circleci.com/gh/chrimaeon/app-rater)
 
 This is a App Rater Dialog to encourage user to rate the app on the Google Play Store&trade;
 
@@ -11,7 +12,6 @@ It is used in my Android&trade; Projects:
 * [Numerals Converter][4]
 * [PhoNews][2]
 * [PhoNews Pro][3]
-* [Running Sushi][5]
 
 ## Usage
 
@@ -88,4 +88,3 @@ limitations under the License.
  [2]: https://play.google.com/store/apps/details?id=at.cmg.android.phonews&referrer=utm_source%3Dgithub%26utm_medium%3DREADME
  [3]: https://play.google.com/store/apps/details?id=com.cmgapps.android.phonewspro&referrer=utm_source%3Dgithub%26utm_medium%3DREADME
  [4]: https://play.google.com/store/apps/details?id=com.cmgapps.android.numeralsconverter&referrer=utm_source%3Dgithub%26utm_medium%3DREADME
- [5]: https://play.google.com/store/apps/details?id=com.cmgapps.android.sushicounter&referrer=utm_source%3Dgithub%26utm_medium%3DREADME
