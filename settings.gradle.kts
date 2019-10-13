@@ -15,4 +15,4 @@
  */
 
 rootProject.name = "app-rater"
-include(":sample", ":library")
+include(":sample", ":library", ":library-ktx")

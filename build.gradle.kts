@@ -1,3 +1,5 @@
+import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
+
 /*
  * Copyright (c) 2019. Christian Grach <christian.grach@cmgapps.com>
  *
@@ -22,9 +24,13 @@ buildscript {
 
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:3.4.0")
+        classpath("com.android.tools.build:gradle:3.5.1")
         classpath(kotlin("gradle-plugin", version = Deps.Versions.KOTLIN))
     }
+}
+
+plugins {
+    id("com.github.ben-manes.versions") version "0.25.0"
 }
 
 allprojects {
@@ -35,6 +41,56 @@ allprojects {
     }
 }
 
-tasks.create<Delete>("clean") {
-    delete(rootProject.buildDir)
+
+subprojects {
+    val ktlint by configurations.creating
+
+    tasks {
+        val ktlint by registering(JavaExec::class) {
+            group = "Verification"
+            description = "Check Kotlin code style."
+            main = "com.pinterest.ktlint.Main"
+            classpath = ktlint
+            args = listOf(
+                "src/**/*.kt",
+                "--reporter=plain",
+                "--reporter=checkstyle,output=${buildDir}/reports/ktlint.xml"
+            )
+
+        }
+
+        afterEvaluate {
+            named("check") {
+                dependsOn(ktlint)
+            }
+        }
+
+        withType<Test> {
+            testLogging {
+                events("passed", "skipped", "failed")
+            }
+        }
+    }
+
+    dependencies {
+        ktlint("com.pinterest:ktlint:0.34.2")
+    }
+
 }
+
+tasks {
+    withType<DependencyUpdatesTask> {
+        revision = "release"
+        rejectVersionIf {
+            listOf("alpha", "beta", "rc", "cr", "m", "preview", "b", "ea").any { qualifier ->
+                candidate.version.matches(Regex("(?i).*[.-]$qualifier[.\\d-+]*"))
+            }
+        }
+    }
+
+    register<Delete>("clean") {
+        delete(rootProject.buildDir)
+    }
+}
+
+

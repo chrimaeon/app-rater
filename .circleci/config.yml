@@ -1,0 +1,49 @@
+version: 2.1
+
+executors:
+  app-rater-android-executor:
+    docker:
+      - image: circleci/android:api-29
+    working_directory: ~/app-rater
+    environment:
+      JAVA_TOOL_OPTIONS: "-Xmx1536m"
+      GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
+      TERM: dumb
+
+commands:
+  store-app-rater-artifacts:
+    description: "It stores Lint & Test Artifacts"
+    parameters:
+      artifact-path:
+        type: string
+    steps:
+      - store_artifacts:
+          path: <<parameters.artifact-path>>
+  store-app-rater-test-results:
+    description: "It stores Test Results"
+    parameters:
+      test-result-path:
+        type: string
+    steps:
+      - store_test_results:
+          path: <<parameters.test-result-path>>
+
+jobs:
+  build:
+    executor: app-rater-android-executor
+    steps:
+      - checkout
+      - run:
+          name: Download Dependencies
+          command: ./gradlew dependencies
+      - run:
+          name: Run JVM Tests & Lint
+          command: ./gradlew check
+      - run:
+          name: Gather Lint & Test results
+          command: python ./scripts/copy_results
+      - store-app-rater-artifacts:
+          artifact-path: ci_results/lint
+      - store-app-rater-test-results:
+          test-result-path: ci_results/test
+

@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 /*
  * Copyright (c) 2019. Christian Grach <christian.grach@cmgapps.com>
  *
@@ -25,10 +27,12 @@ android {
 
     defaultConfig {
         applicationId = "com.cmgapps.android.appratersample"
-        minSdkVersion(19)
+        minSdkVersion(21)
         targetSdkVersion(Deps.Versions.TARGET_SDK_VERSION)
         versionCode = 1
         versionName = "1.0"
+
+        resConfigs("en")
     }
     buildTypes {
         named("release") {
@@ -36,12 +40,24 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
         }
     }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+}
+
+tasks.withType<KotlinCompile> {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 }
 
 dependencies {
-    implementation(project(":library"))
+    implementation(project(":library-ktx"))
     implementation("androidx.appcompat:appcompat:${Deps.Versions.APP_COMPAT}")
     implementation("androidx.core:core-ktx:${Deps.Versions.CORE_KTX}")
     implementation("androidx.lifecycle:lifecycle-extensions:${Deps.Versions.LIFECYCLE_EXT}")
+    implementation("androidx.lifecycle:lifecycle-common-java8:${Deps.Versions.LIFECYCLE_COMMON}")
     implementation(kotlin("stdlib-jdk7", Deps.Versions.KOTLIN))
 }

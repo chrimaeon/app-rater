@@ -1,5 +1,17 @@
 /*
- * Copyright (c) 2019. Christian Grach <christian.grach@cmgapps.com
+ * Copyright (c) 2019. Christian Grach <christian.grach@cmgapps.com>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.cmgapps.android.apprater
@@ -43,17 +55,15 @@ class AppRaterShould {
     @Before
     fun setup() {
 
-
         `when`(mockContext.getSharedPreferences(anyString(), anyInt()))
-                .thenReturn(mockSharedPreferences)
+            .thenReturn(mockSharedPreferences)
 
         `when`(mockContext.packageName).thenReturn("com.cmgapps")
 
         `when`(mockSharedPreferences.edit()).thenReturn(mockEditor)
 
         `when`(mockContext.packageManager)
-                .thenReturn(mockPackageManager)
-
+            .thenReturn(mockPackageManager)
     }
 
     @Test
@@ -64,13 +74,13 @@ class AppRaterShould {
         packageInfo.versionCode = trackingVersion.toInt()
 
         `when`(mockPackageManager.getPackageInfo("com.cmgapps", 0))
-                .thenReturn(packageInfo)
+            .thenReturn(packageInfo)
 
         `when`(mockSharedPreferences.getLong(eq("tracking_version_long"), anyLong()))
-                .thenAnswer { it.getArgument(1) }
+            .thenAnswer { it.getArgument(1) }
 
         `when`(mockSharedPreferences.getInt(eq("use_count"), anyInt()))
-                .thenReturn(0)
+            .thenReturn(0)
 
         val appRater = AppRater.Builder(mockContext).build()
         appRater.incrementUseCount()
@@ -91,10 +101,10 @@ class AppRaterShould {
         packageInfo.versionCode = trackingVersion.toInt()
 
         `when`(mockPackageManager.getPackageInfo("com.cmgapps", 0))
-                .thenReturn(packageInfo)
+            .thenReturn(packageInfo)
 
         `when`(mockSharedPreferences.getLong(eq("tracking_version_long"), anyLong()))
-                .thenReturn(trackingVersion)
+            .thenReturn(trackingVersion)
 
         val appRater = AppRater.Builder(mockContext).build()
         appRater.incrementUseCount()
@@ -116,10 +126,10 @@ class AppRaterShould {
         packageInfo.versionCode = newTrackingVersion.toInt()
 
         `when`(mockPackageManager.getPackageInfo("com.cmgapps", 0))
-                .thenReturn(packageInfo)
+            .thenReturn(packageInfo)
 
         `when`(mockSharedPreferences.getLong(eq("tracking_version_long"), anyLong()))
-                .thenReturn(oldTrackingVersion)
+            .thenReturn(oldTrackingVersion)
 
         val appRater = AppRater.Builder(mockContext).build()
         appRater.incrementUseCount()
@@ -141,18 +151,18 @@ class AppRaterShould {
         packageInfo.versionCode = trackingVersion
 
         `when`(mockPackageManager.getPackageInfo("com.cmgapps", 0))
-                .thenReturn(packageInfo)
+            .thenReturn(packageInfo)
 
         `when`(mockSharedPreferences.getBoolean(eq("declined_rate"), anyBoolean()))
-                .thenReturn(false)
+            .thenReturn(false)
         `when`(mockSharedPreferences.getBoolean(eq("rated"), anyBoolean()))
-                .thenReturn(false)
+            .thenReturn(false)
         `when`(mockSharedPreferences.getLong(eq("first_use"), anyLong()))
-                .thenReturn(0)
+            .thenReturn(0)
         `when`(mockSharedPreferences.getInt(eq("use_count"), anyInt()))
-                .thenReturn(100)
+            .thenReturn(100)
         `when`(mockSharedPreferences.getLong(eq("remind_later_date"), anyLong()))
-                .thenReturn(0)
+            .thenReturn(0)
 
         val appRater = AppRater.Builder(mockContext).build()
         assertThat(appRater.checkForRating(), `is`(true))
@@ -166,9 +176,9 @@ class AppRaterShould {
         packageInfo.versionCode = trackingVersion
 
         `when`(mockPackageManager.getPackageInfo("com.cmgapps", 0))
-                .thenReturn(packageInfo)
+            .thenReturn(packageInfo)
         `when`(mockSharedPreferences.getBoolean(eq("declined_rate"), anyBoolean()))
-                .thenReturn(true)
+            .thenReturn(true)
 
         val appRater = AppRater.Builder(mockContext).build()
         assertThat(appRater.checkForRating(), `is`(false))
@@ -182,12 +192,12 @@ class AppRaterShould {
         packageInfo.versionCode = trackingVersion
 
         `when`(mockPackageManager.getPackageInfo("com.cmgapps", 0))
-                .thenReturn(packageInfo)
+            .thenReturn(packageInfo)
 
         `when`(mockSharedPreferences.getBoolean(eq("declined_rate"), anyBoolean()))
-                .thenReturn(false)
+            .thenReturn(false)
         `when`(mockSharedPreferences.getBoolean(eq("rated"), anyBoolean()))
-                .thenReturn(true)
+            .thenReturn(true)
 
         val appRater = AppRater.Builder(mockContext).build()
         assertThat(appRater.checkForRating(), `is`(false))
@@ -201,14 +211,14 @@ class AppRaterShould {
         packageInfo.versionCode = trackingVersion
 
         `when`(mockPackageManager.getPackageInfo("com.cmgapps", 0))
-                .thenReturn(packageInfo)
+            .thenReturn(packageInfo)
 
         `when`(mockSharedPreferences.getBoolean(eq("declined_rate"), anyBoolean()))
-                .thenReturn(false)
+            .thenReturn(false)
         `when`(mockSharedPreferences.getBoolean(eq("rated"), anyBoolean()))
-                .thenReturn(false)
+            .thenReturn(false)
         `when`(mockSharedPreferences.getLong(eq("first_use"), anyLong()))
-                .thenReturn(System.currentTimeMillis())
+            .thenReturn(System.currentTimeMillis())
 
         val appRater = AppRater.Builder(mockContext).build()
         assertThat(appRater.checkForRating(), `is`(false))
@@ -222,16 +232,16 @@ class AppRaterShould {
         packageInfo.versionCode = trackingVersion
 
         `when`(mockPackageManager.getPackageInfo("com.cmgapps", 0))
-                .thenReturn(packageInfo)
+            .thenReturn(packageInfo)
 
         `when`(mockSharedPreferences.getBoolean(eq("declined_rate"), anyBoolean()))
-                .thenReturn(false)
+            .thenReturn(false)
         `when`(mockSharedPreferences.getBoolean(eq("rated"), anyBoolean()))
-                .thenReturn(false)
+            .thenReturn(false)
         `when`(mockSharedPreferences.getLong(eq("first_use"), anyLong()))
-                .thenReturn(0)
+            .thenReturn(0)
         `when`(mockSharedPreferences.getInt(eq("use_count"), anyInt()))
-                .thenReturn(1)
+            .thenReturn(1)
 
         val appRater = AppRater.Builder(mockContext).build()
         assertThat(appRater.checkForRating(), `is`(false))
@@ -245,18 +255,18 @@ class AppRaterShould {
         packageInfo.versionCode = trackingVersion
 
         `when`(mockPackageManager.getPackageInfo("com.cmgapps", 0))
-                .thenReturn(packageInfo)
+            .thenReturn(packageInfo)
 
         `when`(mockSharedPreferences.getBoolean(eq("declined_rate"), anyBoolean()))
-                .thenReturn(false)
+            .thenReturn(false)
         `when`(mockSharedPreferences.getBoolean(eq("rated"), anyBoolean()))
-                .thenReturn(false)
+            .thenReturn(false)
         `when`(mockSharedPreferences.getLong(eq("first_use"), anyLong()))
-                .thenReturn(0)
+            .thenReturn(0)
         `when`(mockSharedPreferences.getInt(eq("use_count"), anyInt()))
-                .thenReturn(100)
+            .thenReturn(100)
         `when`(mockSharedPreferences.getLong(eq("remind_later_date"), anyLong()))
-                .thenReturn(System.currentTimeMillis())
+            .thenReturn(System.currentTimeMillis())
 
         val appRater = AppRater.Builder(mockContext).build()
         assertThat(appRater.checkForRating(), `is`(false))

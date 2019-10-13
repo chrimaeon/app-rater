@@ -14,20 +14,14 @@
  * limitations under the License.
  */
 
-import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
-import com.jfrog.bintray.gradle.BintrayExtension
 import org.jetbrains.dokka.gradle.DokkaAndroidTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import java.util.Date
-import java.util.Properties
 
 plugins {
     id("com.android.library")
     kotlin("android")
-    id("digital.wup.android-maven-publish") version "3.6.2"
-    id("com.github.ben-manes.versions") version "0.20.0"
-    id("com.jfrog.bintray") version "1.8.4"
     id("org.jetbrains.dokka-android") version "0.9.18"
+    id("bintray-publish")
 }
 
 android {
@@ -35,7 +29,7 @@ android {
     buildToolsVersion(Deps.Versions.BUILD_TOOLS_VERSION)
 
     defaultConfig {
-        minSdkVersion(14)
+        minSdkVersion(Deps.Versions.MIN_SDK_VERSION)
         targetSdkVersion(Deps.Versions.TARGET_SDK_VERSION)
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -60,11 +54,9 @@ tasks.withType(KotlinCompile::class).all {
     }
 }
 
-val pomName: String by project
-val versionName: String by project
 
 tasks.named<DokkaAndroidTask>("dokka") {
-    moduleName = "app-rater"
+    moduleName = "app-rater-ktx"
     outputFormat = "javadoc"
     outputDirectory = "$buildDir/javadoc"
 }
@@ -79,101 +71,10 @@ tasks.register<Jar>("androidSourcesJar") {
     from(android.sourceSets["main"].java.srcDirs)
 }
 
-version = versionName
-
-val group: String by project
-project.group = group
-
-val pomArtifactId: String by project
-val pomDesc: String by project
-
-publishing {
-    publications {
-        register<MavenPublication>("pluginMaven") {
-
-            from(components["android"])
-            artifact(tasks["androidSourcesJar"])
-            artifact(tasks["androidJavadocsJar"])
-
-            artifactId = pomArtifactId
-
-            pom {
-                name.set(pomName)
-                description.set(pomDesc)
-                developers {
-                    developer {
-                        id.set("cgrach")
-                        name.set("Christian Grach")
-                    }
-                }
-                scm {
-                    val pomScmConnection: String by project
-                    connection.set(pomScmConnection)
-                    val pomScmDevConnection: String by project
-                    developerConnection.set(pomScmDevConnection)
-                    val pomScmUrl: String by project
-                    url.set(pomScmUrl)
-                }
-                licenses {
-                    license {
-                        val pomLicenseName: String by project
-                        name.set(pomLicenseName)
-                        val pomLicenseUrl: String by project
-                        url.set(pomLicenseUrl)
-                        distribution.set("repo")
-                    }
-                }
-            }
-        }
-    }
-}
-
-bintray {
-    val credentialProps = Properties()
-    credentialProps.load(file("${project.rootDir}/credentials.properties").inputStream())
-    user = credentialProps.getProperty("user")
-    key = credentialProps.getProperty("key")
-    setPublications("pluginMaven")
-
-    pkg(closureOf<BintrayExtension.PackageConfig> {
-
-        val projectUrl: String by project
-        repo = "maven"
-        name = "${project.group}:$pomArtifactId"
-        userOrg = user
-        setLicenses("Apache-2.0")
-        vcsUrl = projectUrl
-        val issuesTrackerUrl: String by project
-        issueTrackerUrl = issuesTrackerUrl
-        githubRepo = projectUrl
-        version(closureOf<BintrayExtension.VersionConfig> {
-            name = versionName
-            vcsTag = versionName
-            released = Date().toString()
-        })
-    })
-}
-
-tasks.named<DependencyUpdatesTask>("dependencyUpdates") {
-    revision = "release"
-    resolutionStrategy {
-        componentSelection {
-            all {
-                val rejected = listOf("alpha", "beta", "rc", "cr", "m", "preview", "b", "ea").any { qualifier ->
-                    candidate.version.matches(Regex("(?i).*[.-]$qualifier[.\\d-+]*"))
-                }
-                if (rejected) {
-                    reject("Release candidate")
-                }
-            }
-        }
-    }
-}
-
 dependencies {
     implementation("androidx.appcompat:appcompat:${Deps.Versions.APP_COMPAT}")
-    implementation("androidx.core:core-ktx:${Deps.Versions.CORE_KTX}")
-    implementation(kotlin("stdlib-jdk7", Deps.Versions.KOTLIN))
+    api("androidx.core:core-ktx:${Deps.Versions.CORE_KTX}")
+    api(kotlin("stdlib-jdk7", Deps.Versions.KOTLIN))
 
     testImplementation("junit:junit:${Deps.Versions.JUNIT}")
     testImplementation("androidx.test:core:${Deps.Versions.TEST_CORE}")
