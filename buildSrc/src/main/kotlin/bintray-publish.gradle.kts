@@ -78,11 +78,10 @@ fun Project.bintrayPublishConvention(pomName: String, pomDesc: String, pomArtifa
         key = credentialProps.getProperty("key")
         setPublications("pluginMaven")
 
-        dryRun = true
-
         pkg(closureOf<BintrayExtension.PackageConfig> {
 
             val projectUrl: String by project
+            val githubRepo: String by project
             repo = "maven"
             name = "${project.group}:$pomArtifactId"
             userOrg = user
@@ -90,7 +89,7 @@ fun Project.bintrayPublishConvention(pomName: String, pomDesc: String, pomArtifa
             vcsUrl = projectUrl
             val issuesTrackerUrl: String by project
             issueTrackerUrl = issuesTrackerUrl
-            githubRepo = projectUrl
+            this.githubRepo = githubRepo
             version(closureOf<BintrayExtension.VersionConfig> {
                 name = project.version as String
                 vcsTag = project.version as String
