@@ -64,6 +64,12 @@ subprojects {
                 dependsOn(ktlint)
             }
         }
+
+        withType<Test> {
+            testLogging {
+                events("passed", "skipped", "failed")
+            }
+        }
     }
 
     dependencies {
