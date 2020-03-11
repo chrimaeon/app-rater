@@ -39,7 +39,7 @@ tasks.withType(KotlinCompile::class).all {
     }
 }
 
-tasks.withType<DokkaAndroidTask>() {
+tasks.withType<DokkaAndroidTask> {
     moduleName = "app-rater"
     outputFormat = "javadoc"
     outputDirectory = "$buildDir/javadoc"

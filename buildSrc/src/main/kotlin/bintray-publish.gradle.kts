@@ -16,18 +16,17 @@
 
 import com.jfrog.bintray.gradle.BintrayExtension
 import com.jfrog.bintray.gradle.BintrayPlugin
-import digital.wup.android_maven_publish.AndroidMavenPublishPlugin
 import java.util.Date
 import java.util.Properties
 
 fun Project.bintrayPublishConvention(pomName: String, pomDesc: String, pomArtifactId: String) {
-    apply<AndroidMavenPublishPlugin>()
+    apply<MavenPublishPlugin>()
 
     configure<PublishingExtension> {
         publications {
             register<MavenPublication>("pluginMaven") {
 
-                from(components["android"])
+                from(components["release"])
                 artifact(tasks["androidSourcesJar"])
                 artifact(tasks["androidJavadocsJar"])
 

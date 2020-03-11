@@ -1,5 +1,3 @@
-import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
-
 /*
  * Copyright (c) 2019. Christian Grach <christian.grach@cmgapps.com>
  *
@@ -16,6 +14,9 @@ import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
  * limitations under the License.
  */
 
+import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
+import org.gradle.api.tasks.wrapper.Wrapper.DistributionType
+
 buildscript {
     repositories {
         jcenter()
@@ -24,7 +25,7 @@ buildscript {
 
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:3.5.1")
+        classpath("com.android.tools.build:gradle:3.6.1")
         classpath(kotlin("gradle-plugin", version = Deps.Versions.KOTLIN))
     }
 }
@@ -73,7 +74,7 @@ subprojects {
     }
 
     dependencies {
-        ktlint("com.pinterest:ktlint:0.34.2")
+        ktlint("com.pinterest:ktlint:0.36.0")
     }
 
 }
@@ -90,6 +91,11 @@ tasks {
 
     register<Delete>("clean") {
         delete(rootProject.buildDir)
+    }
+
+    named<Wrapper>("wrapper") {
+        distributionType = DistributionType.ALL
+        gradleVersion = "6.2.2"
     }
 }
 
