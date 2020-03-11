@@ -27,12 +27,25 @@ commands:
     steps:
       - store_test_results:
           path: <<parameters.test-result-path>>
+  restore-gradle-wrapper:
+    description: "Restores Gradle Wrapper from cache"
+    steps:
+      - restore_cache:
+          key: v1-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+  save-gradle-wrapper:
+    description: "Save Gradle Wrapper to cache"
+    steps:
+      - save_cache:
+          paths:
+            - ~/.gradle/wrapper
+          key: v1-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
 
 jobs:
   build:
     executor: app-rater-android-executor
     steps:
       - checkout
+      - restore-gradle-wrapper
       - run:
           name: Download Dependencies
           command: ./gradlew dependencies
@@ -46,4 +59,5 @@ jobs:
           artifact-path: ci_results/lint
       - store-app-rater-test-results:
           test-result-path: ci_results/test
+      - save-gradle-wrapper
 
