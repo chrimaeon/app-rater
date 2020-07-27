@@ -19,19 +19,19 @@ import org.gradle.api.tasks.wrapper.Wrapper.DistributionType
 
 buildscript {
     repositories {
-        jcenter()
         google()
+        jcenter()
         mavenCentral()
 
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:3.6.1")
+        classpath("com.android.tools.build:gradle:4.0.1")
         classpath(kotlin("gradle-plugin", version = Deps.Versions.KOTLIN))
     }
 }
 
 plugins {
-    id("com.github.ben-manes.versions") version "0.25.0"
+    id("com.github.ben-manes.versions") version "0.29.0"
 }
 
 allprojects {
@@ -47,7 +47,7 @@ subprojects {
     val ktlint by configurations.creating
 
     tasks {
-        val ktlint by registering(JavaExec::class) {
+        val ktlintTask by register<JavaExec>("ktlint") {
             group = "Verification"
             description = "Check Kotlin code style."
             main = "com.pinterest.ktlint.Main"
@@ -62,7 +62,7 @@ subprojects {
 
         afterEvaluate {
             named("check") {
-                dependsOn(ktlint)
+                dependsOn(ktlintTask)
             }
         }
 
@@ -95,7 +95,7 @@ tasks {
 
     named<Wrapper>("wrapper") {
         distributionType = DistributionType.ALL
-        gradleVersion = "6.2.2"
+        gradleVersion = "6.5.1"
     }
 }
 

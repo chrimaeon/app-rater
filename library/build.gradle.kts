@@ -35,6 +35,11 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    @Suppress("UnstableApiUsage")
+    buildFeatures {
+        viewBinding = true
+    }
+
     buildTypes {
         named("release") {
             isMinifyEnabled = false

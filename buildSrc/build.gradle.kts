@@ -24,7 +24,7 @@ repositories {
 }
 
 dependencies {
-    implementation(kotlin("stdlib-jdk8", "1.3.50"))
-    implementation("com.android.tools.build:gradle:3.6.1")
+    implementation(kotlin("stdlib-jdk8", "1.3.72"))
+    implementation("com.android.tools.build:gradle:4.0.1")
     implementation("com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4")
 }
