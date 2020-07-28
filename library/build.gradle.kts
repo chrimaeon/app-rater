@@ -22,6 +22,7 @@ plugins {
     kotlin("android")
     id("org.jetbrains.dokka-android") version "0.9.18"
     id("bintray-publish")
+    id("com.cmgapps.gradle.ktlint")
 }
 
 android {

@@ -19,6 +19,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("com.android.application")
     kotlin("android")
+    id("com.cmgapps.gradle.ktlint")
 }
 
 android {
@@ -34,6 +35,12 @@ android {
 
         resConfigs("en")
     }
+
+    @Suppress("UnstableApiUsage")
+    buildFeatures {
+        viewBinding = true
+    }
+
     buildTypes {
         named("release") {
             isMinifyEnabled = false
@@ -41,10 +48,10 @@ android {
         }
     }
 
-//    compileOptions {
-//        sourceCompatibility = JavaVersion.VERSION_1_8
-//        targetCompatibility = JavaVersion.VERSION_1_8
-//    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
 }
 
 tasks.withType<KotlinCompile> {

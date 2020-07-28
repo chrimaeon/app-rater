@@ -28,6 +28,7 @@ object Deps {
         const val JUNIT = "4.13"
         const val JUNIT_KTX = "1.1.1"
         const val KOTLIN = "1.3.72"
+        const val KTLINT = "0.37.2"
         const val LIFECYCLE_EXT = "2.2.0"
         const val LIFECYCLE_COMMON = "2.2.0"
         const val MOCKITO_CORE = "3.4.4"

@@ -42,43 +42,6 @@ allprojects {
     }
 }
 
-
-subprojects {
-    val ktlint by configurations.creating
-
-    tasks {
-        val ktlintTask by register<JavaExec>("ktlint") {
-            group = "Verification"
-            description = "Check Kotlin code style."
-            main = "com.pinterest.ktlint.Main"
-            classpath = ktlint
-            args = listOf(
-                "src/**/*.kt",
-                "--reporter=plain",
-                "--reporter=checkstyle,output=${buildDir}/reports/ktlint.xml"
-            )
-
-        }
-
-        afterEvaluate {
-            named("check") {
-                dependsOn(ktlintTask)
-            }
-        }
-
-        withType<Test> {
-            testLogging {
-                events("passed", "skipped", "failed")
-            }
-        }
-    }
-
-    dependencies {
-        ktlint("com.pinterest:ktlint:0.36.0")
-    }
-
-}
-
 tasks {
     withType<DependencyUpdatesTask> {
         revision = "release"
