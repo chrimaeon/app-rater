@@ -6,8 +6,8 @@ executors:
       - image: circleci/android:api-29
     working_directory: ~/app-rater
     environment:
-      JAVA_TOOL_OPTIONS: "-Xmx1536m"
-      GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
+      JAVA_TOOL_OPTIONS: "-Xmx2G"
+      GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.parallel=false -Dorg.gradle.workers.max=2 -Dkotlin.compiler.execution.strategy=in-process -Dkotlin.incremental=false"
       TERM: dumb
 
 commands:
@@ -41,14 +41,14 @@ commands:
           key: v1-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
 
 jobs:
-  build:
+  build-test:
     executor: app-rater-android-executor
     steps:
       - checkout
       - restore-gradle-wrapper
       - run:
           name: Download Dependencies
-          command: ./gradlew dependencies
+          command: ./gradlew androidDependencies
       - run:
           name: Run JVM Tests & Lint
           command: ./gradlew check
@@ -61,3 +61,14 @@ jobs:
           test-result-path: ci_results/test
       - save-gradle-wrapper
 
+workflows:
+  version: 2
+  build-and-test:
+    jobs:
+      - build-test:
+          filters:
+            branches:
+              only:
+                - develop
+                - master
+                - /release\/.*/

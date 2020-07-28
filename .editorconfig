@@ -7,3 +7,6 @@ trim_trailing_whitespace = true
 
 [*.{kt, kts}]
 kotlin_imports_layout = idea
+
+[*.{yaml, yml}]
+indent_size = 2
