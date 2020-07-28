@@ -69,23 +69,18 @@ internal class PreferenceManager(context: Context) {
     override fun toString(): String {
         return JSONObject().apply {
             try {
-                put(DECLINED_RATE, pref.getBoolean(DECLINED_RATE, false))
-                put(APP_RATED, pref.getBoolean(APP_RATED, false))
-                put(TRACKING_VERSION_LONG, pref.getLong(TRACKING_VERSION_LONG, -1))
+                put(DECLINED_RATE, declinedToRate)
+                put(APP_RATED, appRated)
+                put(TRACKING_VERSION_LONG, trackingVersion)
                 put(
                     FIRST_USE,
-                    SimpleDateFormat.getDateTimeInstance().format(Date(pref.getLong(FIRST_USE, 0L)))
+                    SimpleDateFormat.getDateTimeInstance().format(Date(firstUsedTimestamp))
                 )
-                put(USE_COUNT, pref.getInt(USE_COUNT, 0))
+                put(USE_COUNT, useCount)
                 put(
                     REMIND_LATER_DATE,
                     SimpleDateFormat.getDateTimeInstance().format(
-                        Date(
-                            pref.getLong(
-                                REMIND_LATER_DATE,
-                                0L
-                            )
-                        )
+                        Date(remindLaterTimeStamp)
                     )
                 )
             } catch (exc: JSONException) {

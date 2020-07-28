@@ -16,6 +16,7 @@
 
 package com.cmgapps.android.apprater
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -24,7 +25,9 @@ import android.content.pm.PackageManager.NameNotFoundException
 import android.os.Build
 import android.text.format.DateUtils
 import android.util.Log
+import android.view.MotionEvent
 import androidx.appcompat.app.AlertDialog
+import com.cmgapps.android.apprater.databinding.DialogContentBinding
 import com.cmgapps.android.apprater.store.GooglePlayStore
 import com.cmgapps.android.apprater.store.Store
 
@@ -57,10 +60,7 @@ class AppRater private constructor(builder: Builder) {
     }
 
     /**
-     *
-     *
      * Call to check if the requirements to open the rating dialog are met
-     *
      *
      * @return true if requirements are met.
      */
@@ -71,17 +71,14 @@ class AppRater private constructor(builder: Builder) {
         }
 
         return !preferenceManager.declinedToRate &&
-                !preferenceManager.appRated &&
-                System.currentTimeMillis() >= preferenceManager.firstUsedTimestamp + daysUntilPrompt &&
-                preferenceManager.useCount > launchesUntilPrompt &&
-                System.currentTimeMillis() >= preferenceManager.remindLaterTimeStamp + daysUntilRemindAgain
+            !preferenceManager.appRated &&
+            System.currentTimeMillis() >= preferenceManager.firstUsedTimestamp + daysUntilPrompt &&
+            preferenceManager.useCount > launchesUntilPrompt &&
+            System.currentTimeMillis() >= preferenceManager.remindLaterTimeStamp + daysUntilRemindAgain
     }
 
     /**
-     *
-     *
      * Increments the usage count.
-     *
      */
     fun incrementUseCount() {
 
@@ -109,6 +106,7 @@ class AppRater private constructor(builder: Builder) {
      *
      * @param activity An [Activity] to show the dialog from.
      */
+    @SuppressLint("ClickableViewAccessibility")
     fun show(activity: Activity) {
         val pm = activity.packageManager
 
@@ -120,9 +118,14 @@ class AppRater private constructor(builder: Builder) {
             "App"
         }
 
+        val dialogContentBinding = DialogContentBinding.inflate(activity.layoutInflater).apply {
+            header.text =
+                activity.getString(R.string.dialog_cmgrate_message_fmt, appName)
+        }
+
         AlertDialog.Builder(activity)
             .setTitle(R.string.dialog_cmgrate_title)
-            .setMessage(activity.getString(R.string.dialog_cmgrate_message_fmt, appName))
+            .setView(dialogContentBinding.root)
             .setPositiveButton(R.string.dialog_cmgrate_ok) { _, _ ->
                 preferenceManager.appRated = true
 
@@ -138,8 +141,19 @@ class AppRater private constructor(builder: Builder) {
             }
             .setOnCancelListener {
                 preferenceManager.remindLaterTimeStamp = System.currentTimeMillis()
-            }
-            .show()
+            }.create().also {
+                dialogContentBinding.ratingBar.setOnTouchListener { _, event ->
+                    if (event.action == MotionEvent.ACTION_UP) {
+                        preferenceManager.appRated = true
+
+                        val intent = Intent(Intent.ACTION_VIEW, store.getStoreUri(activity))
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        activity.startActivity(intent)
+                        it.dismiss()
+                    }
+                    true
+                }
+            }.show()
     }
 
     /**
@@ -181,7 +195,7 @@ class AppRater private constructor(builder: Builder) {
         }
 
         /**
-         * Set the minimul days to pass until the dialig is shown
+         * Set the minimal days to pass until the dialog is shown
          */
         fun daysUntilPrompt(daysUntilPrompt: Int) = apply {
             _daysUntilPrompt = daysUntilPrompt * DateUtils.DAY_IN_MILLIS
