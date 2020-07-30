@@ -33,7 +33,7 @@ class AppRaterUiShould {
 
     @Rule
     @JvmField
-    var activityScenarioRule = activityScenarioRule<TestActivity>()
+    val activityScenarioRule = activityScenarioRule<TestActivity>()
 
     @Test
     fun showDialog() {

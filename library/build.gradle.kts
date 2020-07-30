@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-import org.jetbrains.dokka.gradle.DokkaAndroidTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("com.android.library")
     kotlin("android")
-    id("org.jetbrains.dokka-android") version "0.9.18"
+    id("org.jetbrains.dokka") version "0.10.1"
     id("bintray-publish")
     id("com.cmgapps.gradle.ktlint")
 }
@@ -49,8 +48,10 @@ android {
     }
 
     compileOptions {
+        coreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
+
     }
 }
 
@@ -61,26 +62,32 @@ tasks.withType(KotlinCompile::class).all {
 }
 
 
-tasks.named<DokkaAndroidTask>("dokka") {
-    moduleName = "app-rater-ktx"
-    outputFormat = "javadoc"
-    outputDirectory = "$buildDir/javadoc"
-}
+tasks {
+    dokka {
+        outputFormat = "javadoc"
+        outputDirectory = "$buildDir/javadoc"
+        configuration {
+            moduleName = "app-rater"
+        }
+    }
 
-tasks.register<Jar>("androidJavadocsJar") {
-    archiveClassifier.set("javadoc")
-    from(tasks["dokka"])
-}
+    register<Jar>("androidJavadocsJar") {
+        archiveClassifier.set("javadoc")
+        from(dokka)
+    }
 
-tasks.register<Jar>("androidSourcesJar") {
-    archiveClassifier.set("sources")
-    from(android.sourceSets["main"].java.srcDirs)
+    register<Jar>("androidSourcesJar") {
+        archiveClassifier.set("sources")
+        from(android.sourceSets["main"].java.srcDirs)
+    }
 }
 
 dependencies {
-    implementation("androidx.appcompat:appcompat:${Deps.Versions.APP_COMPAT}")
-    api("androidx.core:core-ktx:${Deps.Versions.CORE_KTX}")
-    api(kotlin("stdlib-jdk7", Deps.Versions.KOTLIN))
+    implementation("androidx.appcompat:appcompat:" + Deps.Versions.APP_COMPAT)
+    implementation("androidx.core:core-ktx:" + Deps.Versions.CORE_KTX)
+    implementation(kotlin("stdlib-jdk7", Deps.Versions.KOTLIN))
+
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:" + Deps.Versions.DESUGAR_JDK_LIBS)
 
     testImplementation("junit:junit:${Deps.Versions.JUNIT}")
     testImplementation("androidx.test:core:${Deps.Versions.TEST_CORE}")

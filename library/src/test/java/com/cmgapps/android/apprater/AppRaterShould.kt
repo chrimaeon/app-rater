@@ -20,6 +20,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import android.text.format.DateUtils
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
 import org.junit.Before
@@ -270,5 +271,34 @@ class AppRaterShould {
 
         val appRater = AppRater.Builder(mockContext).build()
         assertThat(appRater.checkForRating(), `is`(false))
+    }
+
+    @Test
+    fun `check for rating with valid check requirements`() {
+        val trackingVersion = 1
+
+        val clock = object : Clock {
+            override fun millis() = 11 * DateUtils.DAY_IN_MILLIS
+        }
+
+        val packageInfo = PackageInfo()
+        packageInfo.versionCode = trackingVersion
+
+        `when`(mockPackageManager.getPackageInfo("com.cmgapps", 0))
+            .thenReturn(packageInfo)
+
+        `when`(mockSharedPreferences.getBoolean(eq("declined_rate"), anyBoolean()))
+            .thenReturn(false)
+        `when`(mockSharedPreferences.getBoolean(eq("rated"), anyBoolean()))
+            .thenReturn(false)
+        `when`(mockSharedPreferences.getLong(eq("first_use"), anyLong()))
+            .thenReturn(0)
+        `when`(mockSharedPreferences.getInt(eq("use_count"), anyInt()))
+            .thenReturn(100)
+        `when`(mockSharedPreferences.getLong(eq("remind_later_date"), anyLong()))
+            .thenReturn(0)
+
+        val appRater = AppRater.Builder(mockContext, clock).build()
+        assertThat(appRater.checkForRating(), `is`(true))
     }
 }

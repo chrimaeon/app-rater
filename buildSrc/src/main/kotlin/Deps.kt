@@ -18,11 +18,12 @@ object Deps {
     object Versions {
         const val COMPILE_SDK_VERSION = 29
         const val BUILD_TOOLS_VERSION = "30.0.1"
-        const val MIN_SDK_VERSION: Int = 14
+        const val MIN_SDK_VERSION: Int = 21
         const val TARGET_SDK_VERSION = COMPILE_SDK_VERSION
 
         const val APP_COMPAT = "1.1.0"
         const val CORE_KTX = "1.3.1"
+        const val DESUGAR_JDK_LIBS = "1.0.10"
         const val ESPRESSO_CORE = "3.2.0"
         const val HAMCREST = "2.2"
         const val JUNIT = "4.13"
@@ -31,7 +32,7 @@ object Deps {
         const val KTLINT = "0.37.2"
         const val LIFECYCLE_EXT = "2.2.0"
         const val LIFECYCLE_COMMON = "2.2.0"
-        const val MOCKITO_CORE = "3.4.4"
+        const val MOCKITO_CORE = "3.4.6"
         const val TEST_CORE = "1.2.0"
         const val TEST_RUNNER = "1.2.0"
     }

@@ -27,7 +27,14 @@ fun Project.configureKtlint() {
     val ktlintConfiguration = configurations.create("ktlint")
 
     tasks {
+
+        val inputFiles = fileTree(mapOf("dir" to "src", "include" to "**/*.kt"))
+        val outputDir = "${buildDir}/reports"
+
         register<JavaExec>("ktlintFormat") {
+            inputs.files(inputFiles)
+            outputs.dir(outputDir)
+
             group = "Formatting"
             description = "Fix Kotlin code style deviations."
             main = "com.pinterest.ktlint.Main"
@@ -36,6 +43,9 @@ fun Project.configureKtlint() {
         }
 
         val ktlintTask = register<JavaExec>("ktlint") {
+            inputs.files(inputFiles)
+            outputs.dir(outputDir)
+
             group = "Verification"
             description = "Check Kotlin code style."
             main = "com.pinterest.ktlint.Main"
@@ -43,7 +53,7 @@ fun Project.configureKtlint() {
             args = listOf(
                 "src/**/*.kt",
                 "--reporter=plain",
-                "--reporter=html,output=${buildDir}/reports/ktlint.html"
+                "--reporter=html,output=${outputDir}/ktlint.html"
             )
         }
 

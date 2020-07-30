@@ -46,7 +46,7 @@ tasks {
     withType<DependencyUpdatesTask> {
         revision = "release"
         rejectVersionIf {
-            listOf("alpha", "beta", "rc", "cr", "m", "preview", "b", "ea").any { qualifier ->
+            listOf("alpha", "beta", "rc", "cr", "m", "preview", "b", "ea", "dev").any { qualifier ->
                 candidate.version.matches(Regex("(?i).*[.-]$qualifier[.\\d-+]*"))
             }
         }
