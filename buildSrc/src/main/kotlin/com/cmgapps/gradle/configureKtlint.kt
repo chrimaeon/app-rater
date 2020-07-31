@@ -24,7 +24,7 @@ import org.gradle.kotlin.dsl.invoke
 import org.gradle.kotlin.dsl.register
 
 fun Project.configureKtlint() {
-    val ktlintConfiguration = configurations.create("ktlint")
+    val ktlint = configurations.create("ktlint")
 
     tasks {
 
@@ -38,7 +38,7 @@ fun Project.configureKtlint() {
             group = "Formatting"
             description = "Fix Kotlin code style deviations."
             main = "com.pinterest.ktlint.Main"
-            classpath = ktlintConfiguration
+            classpath = ktlint
             args = listOf("-F", "src/**/*.kt")
         }
 
@@ -49,7 +49,7 @@ fun Project.configureKtlint() {
             group = "Verification"
             description = "Check Kotlin code style."
             main = "com.pinterest.ktlint.Main"
-            classpath = ktlintConfiguration
+            classpath = ktlint
             args = listOf(
                 "src/**/*.kt",
                 "--reporter=plain",
@@ -63,6 +63,6 @@ fun Project.configureKtlint() {
     }
 
     dependencies {
-        ktlintConfiguration("com.pinterest:ktlint:" + Deps.Versions.KTLINT)
+        ktlint("com.pinterest:ktlint:" + Deps.Versions.KTLINT)
     }
 }

@@ -1,17 +1,19 @@
 /*
- * Copyright (c) 2016. Christian Grach <christian.grach@cmgapps.com
+ * Copyright (c) 2016. Christian Grach <christian.grach@cmgapps.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
  */
 
 package com.cmgapps.android
 
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.cmgapps.android.apprater.AppRater
 import com.cmgapps.android.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private lateinit var appRater: AppRater
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,18 +23,20 @@ class MainActivity : AppCompatActivity() {
             appRater.show(this)
         }
 
-        ActivityMainBinding.inflate(layoutInflater).apply {
-            output.text = appRater.toString()
+        binding = ActivityMainBinding.inflate(layoutInflater).apply {
+            button.setOnClickListener {
+                appRater.show(this@MainActivity)
+            }
             setContentView(root)
         }
     }
 
-    @Suppress("UNUSED_PARAMETER")
-    fun showDialogClicked(v: View) {
-        appRater.show(this)
+    override fun onResume() {
+        super.onResume()
+        binding.output.text = appRater.toString()
     }
 
-    companion object {
+    private companion object {
         private val TAG = "MainActivity"
     }
 }

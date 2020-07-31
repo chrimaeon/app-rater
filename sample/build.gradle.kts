@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 /*
  * Copyright (c) 2019. Christian Grach <christian.grach@cmgapps.com>
  *
@@ -15,6 +13,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("com.android.application")

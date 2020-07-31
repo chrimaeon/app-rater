@@ -14,15 +14,18 @@
  * limitations under the License.
  */
 
-plugins {
-    `kotlin-dsl`
-}
+package com.cmgapps.gradle
 
-repositories {
-    jcenter()
-}
+afterEvaluate {
+    val versionName: String by project
+    project.version = versionName
 
-dependencies {
-    implementation(kotlin("stdlib-jdk8", "1.3.72"))
-    implementation("com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.5")
+    val group: String by project
+    project.group = group
+
+    val pomName: String by project
+    val pomDesc: String by project
+    val pomArtifactId: String by project
+
+    configureBintrayPublish(pomName, pomDesc, pomArtifactId)
 }

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-  Copyright (c) 2016. Christian Grach <christian.grach@cmgapps.com
+  Copyright (c) 2020. Christian Grach <christian.grach@cmgapps.com>
+
+  SPDX-License-Identifier: Apache-2.0
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -14,9 +16,9 @@
     tools:context="com.cmgapps.android.MainActivity">
 
     <Button
+        android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="showDialogClicked"
         android:text="@string/show_dialog" />
 
     <TextView
