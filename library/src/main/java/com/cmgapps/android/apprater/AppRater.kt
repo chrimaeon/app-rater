@@ -126,7 +126,7 @@ class AppRater private constructor(builder: Builder) {
             .setTitle(R.string.dialog_cmgrate_title)
             .setView(dialogContentBinding.root)
             .setPositiveButton(R.string.dialog_cmgrate_ok) { _, _ ->
-                preferenceManager.appRated = true
+                setCurrentVersionRated()
 
                 val intent = Intent(Intent.ACTION_VIEW, store.getStoreUri(activity))
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -143,7 +143,7 @@ class AppRater private constructor(builder: Builder) {
             }.create().also {
                 dialogContentBinding.ratingBar.setOnTouchListener { _, event ->
                     if (event.action == MotionEvent.ACTION_UP) {
-                        preferenceManager.appRated = true
+                        setCurrentVersionRated()
 
                         val intent = Intent(Intent.ACTION_VIEW, store.getStoreUri(activity))
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -160,6 +160,17 @@ class AppRater private constructor(builder: Builder) {
      */
     override fun toString(): String {
         return preferenceManager.toString()
+    }
+
+    /**
+     * Manually set the rated flag for the current version.
+     *
+     * Useful when not using the provided [AlertDialog]; i.e. when using
+     * [Google Play In-App Review API](https://developer.android.com/guide/playcore/in-app-review)
+     *
+     */
+    fun setCurrentVersionRated() {
+        preferenceManager.appRated = true
     }
 
     /**
