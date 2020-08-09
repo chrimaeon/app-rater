@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
+import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.utils.addToStdlib.cast
 
 plugins {
     id("com.android.library")
@@ -52,6 +54,14 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
 
+    }
+
+    testOptions {
+        unitTests.all(closureOf<Test> {
+            testLogging {
+                events(TestLogEvent.PASSED, TestLogEvent.FAILED, TestLogEvent.SKIPPED)
+            }
+        }.cast())
     }
 }
 

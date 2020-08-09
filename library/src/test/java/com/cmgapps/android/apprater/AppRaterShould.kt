@@ -301,4 +301,18 @@ class AppRaterShould {
         val appRater = AppRater.Builder(mockContext, clock).build()
         assertThat(appRater.checkForRating(), `is`(true))
     }
+
+    @Test
+    fun `manually set 'rated'`() {
+        val trackingVersion = 1L
+        val packageInfo = PackageInfo()
+        packageInfo.versionCode = trackingVersion.toInt()
+
+        `when`(mockPackageManager.getPackageInfo("com.cmgapps", 0))
+            .thenReturn(packageInfo)
+
+        val appRater = AppRater.Builder(mockContext).build()
+        appRater.setCurrentVersionRated()
+        verify(mockEditor).putBoolean("rated", true)
+    }
 }

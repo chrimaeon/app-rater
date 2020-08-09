@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
+import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.utils.addToStdlib.cast
 
 plugins {
     id("com.android.library")
@@ -30,6 +32,14 @@ android {
 
     defaultConfig {
         minSdkVersion(Deps.Versions.MIN_SDK_VERSION)
+    }
+
+    testOptions {
+        unitTests.all(closureOf<Test> {
+            testLogging {
+                events(TestLogEvent.PASSED, TestLogEvent.FAILED, TestLogEvent.SKIPPED)
+            }
+        }.cast())
     }
 }
 
