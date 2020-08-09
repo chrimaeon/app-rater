@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/badge/license-Apache%202.0-brightgreen.svg?style=for-the-badge&logo=apache)](http://www.apache.org/licenses/LICENSE-2.0)
 [![Bintray](https://www.cmgapps.com/badge/chrimaeon/maven/com.cmgapps.android:app-rater/badge.svg)](https://jcenter.bintray.com/com/cmgapps/android/cmgUtilities/)
 
-__This is a App Rater Dialog to encourage user to rate the app on the Google Play Store&trade;__
+__This is a App Rater Dialog to encourage user to rate the app__
 
 ## Usage
 
@@ -11,7 +11,7 @@ Add the following dependency to your `build.gradle`.
 
 ```groovy
 dependencies {
-    implementation 'com.cmgapps.android:app-rater:<version>'
+    implementation 'com.cmgapps.android:app-rater:3.0.0'
 }
 ```
 
@@ -57,10 +57,31 @@ override fun onCreate(savedInstanceState: Bundle) {
 }
 ```
 
+### Kotlin Extension
+Add the following dependency to your `build.gradle`.
+
+```groovy
+dependencies {
+    implementation 'com.cmgapps.android:app-rater-ktx:3.0.0'
+}
+```
+
+You can now configure and create the App Rater using a DSL
+
+```kotlin
+override fun onCreate() {
+    super.onCreate()
+    val appRater = appRater(this) {
+        daysUntilPrompt(3)
+        launchesUntilPrompt(10)
+    }
+}
+```
+
 ## License
 
 ```text
-Copyright 2016-2019 Christian Grach
+Copyright 2016-2020 Christian Grach
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

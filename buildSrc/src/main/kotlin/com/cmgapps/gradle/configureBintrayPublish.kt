@@ -8,6 +8,7 @@ package com.cmgapps.gradle
 
 import com.jfrog.bintray.gradle.BintrayExtension
 import com.jfrog.bintray.gradle.BintrayPlugin
+import credentials
 import org.gradle.api.Project
 import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPublication
@@ -19,7 +20,6 @@ import org.gradle.kotlin.dsl.get
 import org.gradle.kotlin.dsl.provideDelegate
 import org.gradle.kotlin.dsl.register
 import java.util.Date
-import java.util.Properties
 
 fun Project.configureBintrayPublish(pomName: String, pomDesc: String, pomArtifactId: String) {
     apply<MavenPublishPlugin>()
@@ -68,15 +68,12 @@ fun Project.configureBintrayPublish(pomName: String, pomDesc: String, pomArtifac
     apply<BintrayPlugin>()
 
     configure<BintrayExtension> {
-        val credentialProps = Properties().apply {
-            val propsFile = rootProject.file("credentials.properties")
-            if (propsFile.exists()) {
-                load(propsFile.inputStream())
-            }
-        }
+        val user by project.credentials()
+        val key by project.credentials()
 
-        user = credentialProps.getProperty("user")
-        key = credentialProps.getProperty("key")
+        this.user = user
+        this.key = key
+
         setPublications("pluginMaven")
 
         pkg(closureOf<BintrayExtension.PackageConfig> {
