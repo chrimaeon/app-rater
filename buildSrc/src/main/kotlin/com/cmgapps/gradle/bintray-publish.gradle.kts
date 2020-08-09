@@ -14,5 +14,18 @@
  * limitations under the License.
  */
 
-rootProject.name = "App-Rater"
-include(":sample", ":library", ":library-ktx")
+package com.cmgapps.gradle
+
+afterEvaluate {
+    val versionName: String by project
+    project.version = versionName
+
+    val group: String by project
+    project.group = group
+
+    val pomName: String by project
+    val pomDesc: String by project
+    val pomArtifactId: String by project
+
+    configureBintrayPublish(pomName, pomDesc, pomArtifactId)
+}

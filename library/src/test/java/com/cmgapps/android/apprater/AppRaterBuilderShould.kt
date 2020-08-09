@@ -34,7 +34,7 @@ class AppRaterBuilderShould {
     @Mock
     lateinit var mockContext: Context
 
-    lateinit var builder: AppRater.Builder
+    private lateinit var builder: AppRater.Builder
 
     @Before
     fun setup() {
@@ -46,30 +46,30 @@ class AppRaterBuilderShould {
         val store = mock(Store::class.java)
         builder.store(store)
 
-        assertThat(builder._store, `is`(store))
+        assertThat(builder.store, `is`(store))
     }
 
     @Test
     fun `set launches until prompt`() {
         builder.launchesUntilPrompt(200)
-        assertThat(builder._launchesUntilPrompt, `is`(200))
+        assertThat(builder.launchesUntilPrompt, `is`(200))
     }
 
     @Test
     fun `set days until prompt`() {
         builder.daysUntilPrompt(50)
-        assertThat(builder._daysUntilPrompt, `is`(50 * DateUtils.DAY_IN_MILLIS))
+        assertThat(builder.daysUntilPrompt, `is`(50 * DateUtils.DAY_IN_MILLIS))
     }
 
     @Test
     fun `set days until remind again`() {
         builder.daysUntilRemindAgain(20)
-        assertThat(builder._daysUntilRemindAgain, `is`(20 * DateUtils.DAY_IN_MILLIS))
+        assertThat(builder.daysUntilRemindAgain, `is`(20 * DateUtils.DAY_IN_MILLIS))
     }
 
     @Test
     fun `set debug mode`() {
         builder.debug(true)
-        assertThat(builder._debug, `is`(true))
+        assertThat(builder.debug, `is`(true))
     }
 }

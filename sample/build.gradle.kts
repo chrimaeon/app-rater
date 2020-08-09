@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 /*
  * Copyright (c) 2019. Christian Grach <christian.grach@cmgapps.com>
  *
@@ -16,9 +14,12 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
  * limitations under the License.
  */
 
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     id("com.android.application")
     kotlin("android")
+    id("com.cmgapps.gradle.ktlint")
 }
 
 android {
@@ -34,6 +35,12 @@ android {
 
         resConfigs("en")
     }
+
+    @Suppress("UnstableApiUsage")
+    buildFeatures {
+        viewBinding = true
+    }
+
     buildTypes {
         named("release") {
             isMinifyEnabled = false

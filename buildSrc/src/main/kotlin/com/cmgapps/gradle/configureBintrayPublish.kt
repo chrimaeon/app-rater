@@ -1,33 +1,34 @@
 /*
- * Copyright (c) 2019. Christian Grach <christian.grach@cmgapps.com>
+ * Copyright (c) 2020. Christian Grach <christian.grach@cmgapps.com>
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * SPDX-License-Identifier: Apache-2.0
  */
+
+package com.cmgapps.gradle
 
 import com.jfrog.bintray.gradle.BintrayExtension
 import com.jfrog.bintray.gradle.BintrayPlugin
-import digital.wup.android_maven_publish.AndroidMavenPublishPlugin
+import credentials
+import org.gradle.api.Project
+import org.gradle.api.publish.PublishingExtension
+import org.gradle.api.publish.maven.MavenPublication
+import org.gradle.api.publish.maven.plugins.MavenPublishPlugin
+import org.gradle.kotlin.dsl.apply
+import org.gradle.kotlin.dsl.closureOf
+import org.gradle.kotlin.dsl.configure
+import org.gradle.kotlin.dsl.get
+import org.gradle.kotlin.dsl.provideDelegate
+import org.gradle.kotlin.dsl.register
 import java.util.Date
-import java.util.Properties
 
-fun Project.bintrayPublishConvention(pomName: String, pomDesc: String, pomArtifactId: String) {
-    apply<AndroidMavenPublishPlugin>()
+fun Project.configureBintrayPublish(pomName: String, pomDesc: String, pomArtifactId: String) {
+    apply<MavenPublishPlugin>()
 
     configure<PublishingExtension> {
         publications {
             register<MavenPublication>("pluginMaven") {
 
-                from(components["android"])
+                from(components["release"])
                 artifact(tasks["androidSourcesJar"])
                 artifact(tasks["androidJavadocsJar"])
 
@@ -67,15 +68,12 @@ fun Project.bintrayPublishConvention(pomName: String, pomDesc: String, pomArtifa
     apply<BintrayPlugin>()
 
     configure<BintrayExtension> {
-        val credentialProps = Properties().apply {
-            val propsFile = rootProject.file("credentials.properties")
-            if (propsFile.exists()) {
-                load(propsFile.inputStream())
-            }
-        }
+        val user by project.credentials()
+        val key by project.credentials()
 
-        user = credentialProps.getProperty("user")
-        key = credentialProps.getProperty("key")
+        this.user = user
+        this.key = key
+
         setPublications("pluginMaven")
 
         pkg(closureOf<BintrayExtension.PackageConfig> {
@@ -96,20 +94,5 @@ fun Project.bintrayPublishConvention(pomName: String, pomDesc: String, pomArtifa
                 released = Date().toString()
             })
         })
-
     }
-}
-
-afterEvaluate {
-    val versionName: String by project
-    project.version = versionName
-
-    val group: String by project
-    project.group = group
-
-    val pomName: String by project
-    val pomDesc: String by project
-    val pomArtifactId: String by project
-
-    bintrayPublishConvention(pomName, pomDesc, pomArtifactId)
 }

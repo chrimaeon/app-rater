@@ -18,11 +18,5 @@ package com.cmgapps.android.apprater
 
 import android.content.Context
 
-@DslMarker
-annotation class AppRaterDsl
-
-@AppRaterDsl
-class AppRaterBuilder(context: Context) : AppRater.Builder(context)
-
-inline fun appRater(context: Context, buildAppRater: AppRaterBuilder.() -> Unit = {}) =
-    AppRaterBuilder(context).apply(buildAppRater).build()
+inline fun appRater(context: Context, block: AppRater.Builder.() -> Unit = {}) =
+    AppRater.Builder(context).apply(block).build()

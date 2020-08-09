@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-import org.jetbrains.dokka.gradle.DokkaAndroidTask
+import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.utils.addToStdlib.cast
 
 plugins {
     id("com.android.library")
     kotlin("android")
-    id("org.jetbrains.dokka-android") version "0.9.18"
-    id("bintray-publish")
+    id("org.jetbrains.dokka") version "0.10.1"
+    ktlint()
+    bintrayPublish()
 }
 
 android {
@@ -31,6 +33,14 @@ android {
     defaultConfig {
         minSdkVersion(Deps.Versions.MIN_SDK_VERSION)
     }
+
+    testOptions {
+        unitTests.all(closureOf<Test> {
+            testLogging {
+                events(TestLogEvent.PASSED, TestLogEvent.FAILED, TestLogEvent.SKIPPED)
+            }
+        }.cast())
+    }
 }
 
 tasks.withType(KotlinCompile::class).all {
@@ -39,24 +49,28 @@ tasks.withType(KotlinCompile::class).all {
     }
 }
 
-tasks.withType<DokkaAndroidTask>() {
-    moduleName = "app-rater"
-    outputFormat = "javadoc"
-    outputDirectory = "$buildDir/javadoc"
-}
+tasks {
+    dokka {
+        outputFormat = "javadoc"
+        outputDirectory = "$buildDir/javadoc"
 
-tasks.register<Jar>("androidJavadocsJar") {
-    archiveClassifier.set("javadoc")
-    from(tasks["dokka"])
-}
+        configuration {
+            moduleName = "app-rater"
+        }
+    }
 
-tasks.register<Jar>("androidSourcesJar") {
-    archiveClassifier.set("sources")
-    from(android.sourceSets["main"].java.srcDirs)
+    register<Jar>("androidJavadocsJar") {
+        archiveClassifier.set("javadoc")
+        from(dokka)
+    }
+
+    register<Jar>("androidSourcesJar") {
+        archiveClassifier.set("sources")
+        from(android.sourceSets["main"].java.srcDirs)
+    }
 }
 
 dependencies {
     api(project(":library"))
     implementation(kotlin("stdlib-jdk7", Deps.Versions.KOTLIN))
 }
-

@@ -1,17 +1,9 @@
-# Android&trade; App Rater Dialog
+# Android&trade; App Rater Dialog [![CircleCI](https://circleci.com/gh/chrimaeon/app-rater.svg?style=svg)](https://circleci.com/gh/chrimaeon/app-rater)
 
 [![License](https://img.shields.io/badge/license-Apache%202.0-brightgreen.svg?style=for-the-badge&logo=apache)](http://www.apache.org/licenses/LICENSE-2.0)
 [![Bintray](https://www.cmgapps.com/badge/chrimaeon/maven/com.cmgapps.android:app-rater/badge.svg)](https://jcenter.bintray.com/com/cmgapps/android/cmgUtilities/)
-[![CircleCI](https://circleci.com/gh/chrimaeon/app-rater.svg?style=svg)](https://circleci.com/gh/chrimaeon/app-rater)
 
-This is a App Rater Dialog to encourage user to rate the app on the Google Play Store&trade;
-
-It is used in my Android&trade; Projects:
-
-* [Bierdeckel][1]
-* [Numerals Converter][4]
-* [PhoNews][2]
-* [PhoNews Pro][3]
+__This is a App Rater Dialog to encourage user to rate the app__
 
 ## Usage
 
@@ -19,7 +11,7 @@ Add the following dependency to your `build.gradle`.
 
 ```groovy
 dependencies {
-    implementation 'com.cmgapps.android:app-rater:<version>'
+    implementation 'com.cmgapps.android:app-rater:3.0.0'
 }
 ```
 
@@ -53,7 +45,7 @@ class AppLifecycleListener(private val appRater: AppRater) : LifecycleObserver {
 ```
 and in your main `Activity#onCreate` check if requirements for rating are met and show the dialog
 
-```koltin
+```kotlin
 override fun onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
@@ -63,13 +55,34 @@ override fun onCreate(savedInstanceState: Bundle) {
         mAppRater.show(this)
     }
 }
-``` 
+```
+
+### Kotlin Extension
+Add the following dependency to your `build.gradle`.
+
+```groovy
+dependencies {
+    implementation 'com.cmgapps.android:app-rater-ktx:3.0.0'
+}
+```
+
+You can now configure and create the App Rater using a DSL
+
+```kotlin
+override fun onCreate() {
+    super.onCreate()
+    val appRater = appRater(this) {
+        daysUntilPrompt(3)
+        launchesUntilPrompt(10)
+    }
+}
+```
 
 ## License
 
 ```text
-Copyright 2016-2019 Christian Grach
-    
+Copyright 2016-2020 Christian Grach
+
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
