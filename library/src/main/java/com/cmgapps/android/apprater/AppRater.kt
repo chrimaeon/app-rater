@@ -38,7 +38,7 @@ class AppRater private constructor(builder: Builder) {
     private val daysUntilPrompt = builder.daysUntilPrompt
     private val daysUntilRemindAgain = builder.daysUntilRemindAgain
     private val store = builder.store
-    private val preferenceManager = PreferenceManager(builder.context)
+    private val preferenceManager = PreferenceManager(builder.context, builder.clock)
     private val versionCode: Long = try {
         val context = builder.context
         val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)

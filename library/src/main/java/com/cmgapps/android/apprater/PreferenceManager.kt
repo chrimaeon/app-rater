@@ -25,7 +25,7 @@ import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.Date
 
-internal class PreferenceManager(context: Context) {
+internal class PreferenceManager(context: Context, private val clock: Clock) {
 
     private val pref: SharedPreferences =
         context.getSharedPreferences(APP_RATE_FILE_NAME, Context.MODE_PRIVATE)
@@ -58,7 +58,7 @@ internal class PreferenceManager(context: Context) {
     fun resetNewVersion(versionCode: Long) {
         pref.edit {
             putLong(TRACKING_VERSION_LONG, versionCode)
-            putLong(FIRST_USE, System.currentTimeMillis())
+            putLong(FIRST_USE, clock.millis())
             putInt(USE_COUNT, 1)
             putBoolean(DECLINED_RATE, false)
             putLong(REMIND_LATER_DATE, 0L)
