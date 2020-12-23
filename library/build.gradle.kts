@@ -14,14 +14,11 @@
  * limitations under the License.
  */
 
-import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.jetbrains.kotlin.utils.addToStdlib.cast
 
 plugins {
     id("com.android.library")
     kotlin("android")
-    id("org.jetbrains.dokka") version "0.10.1"
     bintrayPublish()
     ktlint()
 }
@@ -37,9 +34,11 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    @Suppress("UnstableApiUsage")
     buildFeatures {
         viewBinding = true
+        buildConfig = false
+        renderScript = false
+        aidl = false
     }
 
     buildTypes {
@@ -50,45 +49,32 @@ android {
     }
 
     compileOptions {
-        coreLibraryDesugaringEnabled = true
+//        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
 
     }
 
     testOptions {
-        unitTests.all(closureOf<Test> {
-            testLogging {
-                events(TestLogEvent.PASSED, TestLogEvent.FAILED, TestLogEvent.SKIPPED)
-            }
-        }.cast())
+//        unitTests.all(closureOf<Test> {
+//            testLogging {
+//                events(TestLogEvent.PASSED, TestLogEvent.FAILED, TestLogEvent.SKIPPED)
+//            }
+//        }.cast())
     }
 }
-
-tasks.withType(KotlinCompile::class).all {
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-}
-
 
 tasks {
-    dokka {
-        outputFormat = "javadoc"
-        outputDirectory = "$buildDir/javadoc"
-        configuration {
-            moduleName = "app-rater"
+    withType(KotlinCompile::class).all {
+        kotlinOptions {
+            jvmTarget = "1.8"
         }
     }
 
-    register<Jar>("androidJavadocsJar") {
-        archiveClassifier.set("javadoc")
-        from(dokka)
-    }
-
-    register<Jar>("androidSourcesJar") {
-        archiveClassifier.set("sources")
-        from(android.sourceSets["main"].java.srcDirs)
+    afterEvaluate {
+        named<Jar>("androidSourcesJar") {
+            from(android.sourceSets["main"].java.srcDirs)
+        }
     }
 }
 
@@ -97,7 +83,7 @@ dependencies {
     implementation("androidx.core:core-ktx:" + Deps.Versions.CORE_KTX)
     implementation(kotlin("stdlib-jdk7", Deps.Versions.KOTLIN))
 
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:" + Deps.Versions.DESUGAR_JDK_LIBS)
+//    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:" + Deps.Versions.DESUGAR_JDK_LIBS)
 
     testImplementation("junit:junit:${Deps.Versions.JUNIT}")
     testImplementation("androidx.test:core:${Deps.Versions.TEST_CORE}")

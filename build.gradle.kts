@@ -25,13 +25,15 @@ buildscript {
 
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:4.0.1")
+        classpath("com.android.tools.build:gradle:4.1.1")
         classpath(kotlin("gradle-plugin", version = Deps.Versions.KOTLIN))
+        classpath("org.jetbrains.dokka:dokka-gradle-plugin:1.4.20")
+
     }
 }
 
 plugins {
-    id("com.github.ben-manes.versions") version "0.29.0"
+    id("com.github.ben-manes.versions") version "0.36.0"
 }
 
 allprojects {
