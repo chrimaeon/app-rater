@@ -99,7 +99,7 @@ workflows:
                 - develop
                 - master
                 - /release\/.*/
-      - hold:
+      - hold-deploy:
           type: approval
           requires:
             - build-test
@@ -110,13 +110,13 @@ workflows:
               ignore: /.*/
       - deploy:
           requires:
-            - hold
+            - hold-deploy
           filters:
             tags:
               only: /.*/
             branches:
               ignore: /.*/
-      - hold:
+      - hold-release:
           type: approval
           requires:
             - deploy
@@ -127,7 +127,7 @@ workflows:
               ignore: /.*/
       - createRelease:
           requires:
-            - hold
+            - hold-release
           filters:
             tags:
               only: /.*/
