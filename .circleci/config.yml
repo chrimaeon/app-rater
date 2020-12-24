@@ -4,6 +4,9 @@ executors:
   android-executor:
     docker:
       - image: circleci/android:api-29
+        auth:
+          username: chrimaeon
+          password: $DOCKERHUB_PASSWORD
     working_directory: ~/app-rater
     environment:
       JAVA_TOOL_OPTIONS: "-Xmx3G"
@@ -91,6 +94,8 @@ workflows:
   build-and-test:
     jobs:
       - build-test:
+          context:
+            - DockerHub
           filters:
             tags:
               only: /.*/
@@ -101,6 +106,8 @@ workflows:
                 - /release\/.*/
       - hold-deploy:
           type: approval
+          context:
+            - DockerHub
           requires:
             - build-test
           filters:
@@ -109,6 +116,8 @@ workflows:
             branches:
               ignore: /.*/
       - deploy:
+          context:
+            - DockerHub
           requires:
             - hold-deploy
           filters:
@@ -118,6 +127,8 @@ workflows:
               ignore: /.*/
       - hold-release:
           type: approval
+          context:
+            - DockerHub
           requires:
             - deploy
           filters:
@@ -126,6 +137,8 @@ workflows:
             branches:
               ignore: /.*/
       - createRelease:
+          context:
+            - DockerHub
           requires:
             - hold-release
           filters:
