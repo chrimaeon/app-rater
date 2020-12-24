@@ -53,6 +53,8 @@ class AppRaterShould {
     @Mock
     lateinit var mockPackageManager: PackageManager
 
+    private val clock = TestClock()
+
     @Before
     fun setup() {
 
@@ -83,12 +85,12 @@ class AppRaterShould {
         `when`(mockSharedPreferences.getInt(eq("use_count"), anyInt()))
             .thenReturn(0)
 
-        val appRater = AppRater.Builder(mockContext).build()
+        val appRater = AppRater.Builder(mockContext, clock).build()
         appRater.incrementUseCount()
 
         verify(mockSharedPreferences).getLong(eq("tracking_version_long"), anyLong())
         verify(mockEditor).putLong("tracking_version_long", trackingVersion)
-        verify(mockEditor).putLong(eq("first_use"), anyLong())
+        verify(mockEditor).putLong("first_use", 305078400)
         verify(mockSharedPreferences, times(2)).getInt(eq("use_count"), anyInt())
         verify(mockEditor).putInt("use_count", 1)
     }
@@ -107,12 +109,12 @@ class AppRaterShould {
         `when`(mockSharedPreferences.getLong(eq("tracking_version_long"), anyLong()))
             .thenReturn(trackingVersion)
 
-        val appRater = AppRater.Builder(mockContext).build()
+        val appRater = AppRater.Builder(mockContext, clock).build()
         appRater.incrementUseCount()
 
         verify(mockSharedPreferences).getLong(eq("tracking_version_long"), anyLong())
         verify(mockEditor, times(0)).putLong("tracking_version_long", trackingVersion)
-        verify(mockEditor).putLong(eq("first_use"), anyLong())
+        verify(mockEditor).putLong("first_use", 305078400)
         verify(mockSharedPreferences, times(2)).getInt(eq("use_count"), anyInt())
         verify(mockEditor).putInt("use_count", 1)
     }
@@ -132,12 +134,12 @@ class AppRaterShould {
         `when`(mockSharedPreferences.getLong(eq("tracking_version_long"), anyLong()))
             .thenReturn(oldTrackingVersion)
 
-        val appRater = AppRater.Builder(mockContext).build()
+        val appRater = AppRater.Builder(mockContext, clock).build()
         appRater.incrementUseCount()
 
         verify(mockSharedPreferences).getLong(eq("tracking_version_long"), anyLong())
         verify(mockEditor).putLong("tracking_version_long", newTrackingVersion)
-        verify(mockEditor).putLong(eq("first_use"), anyLong())
+        verify(mockEditor).putLong("first_use", 305078400)
         verify(mockEditor).putInt("use_count", 1)
         verify(mockEditor).putBoolean("declined_rate", false)
         verify(mockEditor).putLong("remind_later_date", 0L)
@@ -219,9 +221,9 @@ class AppRaterShould {
         `when`(mockSharedPreferences.getBoolean(eq("rated"), anyBoolean()))
             .thenReturn(false)
         `when`(mockSharedPreferences.getLong(eq("first_use"), anyLong()))
-            .thenReturn(System.currentTimeMillis())
+            .thenReturn(305078400)
 
-        val appRater = AppRater.Builder(mockContext).build()
+        val appRater = AppRater.Builder(mockContext, clock).build()
         assertThat(appRater.checkForRating(), `is`(false))
     }
 
@@ -251,6 +253,7 @@ class AppRaterShould {
     @Test
     fun `check for rating remind later too low`() {
         val trackingVersion = 1
+        val daysUntilPrompt = 3
 
         val packageInfo = PackageInfo()
         packageInfo.versionCode = trackingVersion
@@ -263,13 +266,14 @@ class AppRaterShould {
         `when`(mockSharedPreferences.getBoolean(eq("rated"), anyBoolean()))
             .thenReturn(false)
         `when`(mockSharedPreferences.getLong(eq("first_use"), anyLong()))
-            .thenReturn(0)
+            .thenReturn(305078400 - ((daysUntilPrompt + 1) * DateUtils.DAY_IN_MILLIS))
         `when`(mockSharedPreferences.getInt(eq("use_count"), anyInt()))
             .thenReturn(100)
         `when`(mockSharedPreferences.getLong(eq("remind_later_date"), anyLong()))
-            .thenReturn(System.currentTimeMillis())
+            .thenReturn(305078400)
 
-        val appRater = AppRater.Builder(mockContext).build()
+        val appRater =
+            AppRater.Builder(mockContext, clock).daysUntilPrompt(daysUntilPrompt).build()
         assertThat(appRater.checkForRating(), `is`(false))
     }
 

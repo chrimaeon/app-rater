@@ -13,15 +13,42 @@ import org.gradle.api.Project
 import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.publish.maven.plugins.MavenPublishPlugin
+import org.gradle.api.tasks.bundling.Jar
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.closureOf
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.get
+import org.gradle.kotlin.dsl.invoke
+import org.gradle.kotlin.dsl.named
 import org.gradle.kotlin.dsl.provideDelegate
 import org.gradle.kotlin.dsl.register
+import org.jetbrains.dokka.gradle.DokkaPlugin
+import org.jetbrains.dokka.gradle.DokkaTask
 import java.util.Date
 
 fun Project.configureBintrayPublish(pomName: String, pomDesc: String, pomArtifactId: String) {
+    apply<DokkaPlugin>()
+
+    tasks {
+
+        val dokka = named<DokkaTask>("dokka") {
+            outputFormat = "javadoc"
+            outputDirectory = "$buildDir/javadoc"
+            configuration {
+                moduleName = "app-rater"
+            }
+        }
+
+        register<Jar>("androidJavadocsJar") {
+            from(dokka)
+            archiveClassifier.set("javadoc")
+        }
+
+        register<Jar>("androidSourcesJar") {
+            archiveClassifier.set("sources")
+        }
+    }
+
     apply<MavenPublishPlugin>()
 
     configure<PublishingExtension> {
@@ -29,8 +56,8 @@ fun Project.configureBintrayPublish(pomName: String, pomDesc: String, pomArtifac
             register<MavenPublication>("pluginMaven") {
 
                 from(components["release"])
-                artifact(tasks["androidSourcesJar"])
                 artifact(tasks["androidJavadocsJar"])
+                artifact(tasks["androidSourcesJar"])
 
                 artifactId = pomArtifactId
 

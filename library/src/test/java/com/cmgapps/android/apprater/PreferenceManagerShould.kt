@@ -48,6 +48,8 @@ class PreferenceManagerShould {
 
     private lateinit var preferenceManager: PreferenceManager
 
+    private val clock = TestClock()
+
     @Before
     fun setup() {
         `when`(mockContext.getSharedPreferences(anyString(), anyInt()))
@@ -56,7 +58,7 @@ class PreferenceManagerShould {
         `when`(mockSharedPreferences.edit())
             .thenReturn(mockEditor)
 
-        preferenceManager = PreferenceManager(mockContext)
+        preferenceManager = PreferenceManager(mockContext, clock)
     }
 
     @Test
@@ -203,7 +205,7 @@ class PreferenceManagerShould {
         preferenceManager.resetNewVersion(56)
         verify(mockSharedPreferences).edit()
         verify(mockEditor).putLong("tracking_version_long", 56)
-        verify(mockEditor).putLong(eq("first_use"), anyLong())
+        verify(mockEditor).putLong("first_use", 305078400)
         verify(mockEditor).putInt("use_count", 1)
         verify(mockEditor).putBoolean("declined_rate", false)
         verify(mockEditor).putLong("remind_later_date", 0L)
