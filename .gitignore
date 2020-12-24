@@ -8,3 +8,4 @@
 build/
 /captures
 /credentials.properties
+/GITHUB_TOKEN
