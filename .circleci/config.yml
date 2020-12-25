@@ -3,7 +3,7 @@ version: 2.1
 executors:
   android-executor:
     docker:
-      - image: circleci/android:api-29
+      - image: circleci/android:api-30
         auth:
           username: chrimaeon
           password: $DOCKERHUB_PASSWORD
