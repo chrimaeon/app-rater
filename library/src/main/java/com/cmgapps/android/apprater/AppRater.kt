@@ -184,8 +184,10 @@ class AppRater private constructor(builder: Builder) {
      * * debug = false
      *
      */
-    @Suppress("PropertyName")
-    class Builder(internal val context: Context, internal val clock: Clock = SystemClock()) {
+    class Builder @JvmOverloads constructor(
+        internal val context: Context,
+        internal val clock: Clock = SystemClock()
+    ) {
         internal var store: Store = GooglePlayStore()
             private set
 
