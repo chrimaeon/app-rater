@@ -11,7 +11,7 @@ Add the following dependency to your `build.gradle`.
 
 ```groovy
 dependencies {
-    implementation 'com.cmgapps.android:app-rater:3.0.1'
+    implementation 'com.cmgapps.android:app-rater:3.0.2'
 }
 ```
 
@@ -62,7 +62,7 @@ Add the following dependency to your `build.gradle`.
 
 ```groovy
 dependencies {
-    implementation 'com.cmgapps.android:app-rater-ktx:3.0.1'
+    implementation 'com.cmgapps.android:app-rater-ktx:3.0.2'
 }
 ```
 
