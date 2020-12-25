@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- add JmvOverloads to Builder constructor
 
 ### Deprecated
 
