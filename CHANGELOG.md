@@ -4,6 +4,18 @@
 ### Added
 
 ### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+## [3.0.2]
+### Added
+
+### Changed
 - add JmvOverloads to Builder constructor
 
 ### Deprecated
