@@ -9,6 +9,7 @@ package com.cmgapps.gradle
 import com.jfrog.bintray.gradle.BintrayExtension
 import com.jfrog.bintray.gradle.BintrayPlugin
 import credentials
+import isCI
 import org.gradle.api.Project
 import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPublication
@@ -18,35 +19,25 @@ import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.closureOf
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.get
-import org.gradle.kotlin.dsl.invoke
-import org.gradle.kotlin.dsl.named
 import org.gradle.kotlin.dsl.provideDelegate
 import org.gradle.kotlin.dsl.register
-import org.jetbrains.dokka.gradle.DokkaPlugin
-import org.jetbrains.dokka.gradle.DokkaTask
 import java.util.Date
 
 fun Project.configureBintrayPublish(pomName: String, pomDesc: String, pomArtifactId: String) {
-    apply<DokkaPlugin>()
 
-    tasks {
+    tasks.register<Jar>("dokkaJavadocJar") {
+        val dokkaJavadoc = tasks.named("dokkaJavadoc")
+        dependsOn(dokkaJavadoc)
+        from(dokkaJavadoc)
+        archiveClassifier.set("javadoc")
+    }
 
-        val dokka = named<DokkaTask>("dokka") {
-            outputFormat = "javadoc"
-            outputDirectory = "$buildDir/javadoc"
-            configuration {
-                moduleName = "app-rater"
-            }
-        }
+    tasks.register<Jar>("dokkaHtmlJar") {
+        val dokkaHtml = tasks.named("dokkaHtml")
 
-        register<Jar>("androidJavadocsJar") {
-            from(dokka)
-            archiveClassifier.set("javadoc")
-        }
-
-        register<Jar>("androidSourcesJar") {
-            archiveClassifier.set("sources")
-        }
+        dependsOn(dokkaHtml)
+        from(dokkaHtml)
+        archiveClassifier.set("html-doc")
     }
 
     apply<MavenPublishPlugin>()
@@ -56,8 +47,9 @@ fun Project.configureBintrayPublish(pomName: String, pomDesc: String, pomArtifac
             register<MavenPublication>("pluginMaven") {
 
                 from(components["release"])
-                artifact(tasks["androidJavadocsJar"])
-                artifact(tasks["androidSourcesJar"])
+                artifact(tasks["dokkaHtmlJar"])
+                artifact(tasks["dokkaJavadocJar"])
+                artifact(tasks["sourcesJar"])
 
                 artifactId = pomArtifactId
 
@@ -121,5 +113,7 @@ fun Project.configureBintrayPublish(pomName: String, pomDesc: String, pomArtifac
                 released = Date().toString()
             })
         })
+
+        isPublish = !isCI()
     }
 }

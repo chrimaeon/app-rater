@@ -24,14 +24,15 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.logging.HttpLoggingInterceptor
 import org.gradle.api.tasks.wrapper.Wrapper.DistributionType
 import org.json.simple.JSONObject
+import java.io.IOException
 
 buildscript {
     repositories {
         google()
         jcenter()
         mavenCentral()
-
     }
+
     dependencies {
         classpath("com.android.tools.build:gradle:4.1.1")
         classpath(kotlin("gradle-plugin", version = Deps.Versions.KOTLIN))
@@ -43,6 +44,7 @@ buildscript {
 plugins {
     id("com.github.ben-manes.versions") version "0.36.0"
     id("org.jetbrains.changelog") version "0.6.2"
+    id("org.jetbrains.dokka") version "1.4.20" apply false
 }
 
 allprojects {
@@ -106,7 +108,7 @@ fun sendCreateReleaseRequest(version: String, body: String): Response? {
                     mapOf(
                         "tag_name" to version,
                         "name" to version,
-                        "draft" to true,
+                        "draft" to !isCI(),
                         "body" to body
                     )
                 ).toRequestBody("application/json".toMediaType())
@@ -126,8 +128,9 @@ fun sendCreateReleaseRequest(version: String, body: String): Response? {
     return OkHttpClient.Builder()
         .addInterceptor(loggingInterceptor)
         .build().newCall(request).execute().use { response ->
-            if (!response.isSuccessful) throw java.io.IOException("Unexpected response: $response")
+            if (!response.isSuccessful) throw IOException("Unexpected response: $response")
 
+            // TODO use kotlin-serialization once gradle uses Kotlin 1.4
             Gson().fromJson(response.body?.string(), Response::class.java)
         }
 }

@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
+import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("com.android.library")
     kotlin("android")
-    ktlint()
-    bintrayPublish()
+    id("org.jetbrains.dokka")
+    ktlint
+    bintrayPublish
 }
 
 android {
@@ -38,11 +40,11 @@ android {
     }
 
     testOptions {
-//        unitTests.all(closureOf<Test> {
-//            testLogging {
-//                events(TestLogEvent.PASSED, TestLogEvent.FAILED, TestLogEvent.SKIPPED)
-//            }
-//        }.cast())
+        unitTests.all { test ->
+            test.testLogging {
+                events(TestLogEvent.PASSED, TestLogEvent.FAILED, TestLogEvent.SKIPPED)
+            }
+        }
     }
 }
 
@@ -53,10 +55,21 @@ tasks {
         }
     }
 
-    afterEvaluate {
-        named<Jar>("androidSourcesJar") {
-            from(android.sourceSets["main"].java.srcDirs)
+    withType<org.jetbrains.dokka.gradle.DokkaTask> {
+        moduleName.set("app-rater-ktx")
+        dokkaSourceSets {
+            named("main") {
+                noAndroidSdkLink.set(false)
+            }
+            named("debug") {
+                suppress.set(true)
+            }
         }
+    }
+
+    register<Jar>("sourcesJar") {
+        from(android.sourceSets["main"].java.srcDirs)
+        archiveClassifier.set("sources")
     }
 }
 

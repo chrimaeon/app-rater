@@ -26,5 +26,4 @@ repositories {
 dependencies {
     implementation(kotlin("stdlib-jdk8", "1.4.21"))
     implementation("com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.5")
-    implementation("org.jetbrains.dokka:dokka-gradle-plugin:0.10.1")
 }
