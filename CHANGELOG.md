@@ -4,6 +4,18 @@
 ### Added
 
 ### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+## [3.1.0]
+### Added
+
+### Changed
 - Move deployment to MavenCentral
 
 ### Deprecated
