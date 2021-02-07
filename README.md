@@ -1,7 +1,7 @@
 # Android&trade; App Rater Dialog [![CircleCI](https://circleci.com/gh/chrimaeon/app-rater.svg?style=svg)](https://circleci.com/gh/chrimaeon/app-rater)
 
 [![License](https://img.shields.io/badge/license-Apache%202.0-brightgreen.svg?style=for-the-badge&logo=apache)](http://www.apache.org/licenses/LICENSE-2.0)
-[![MavenCentral](https://img.shields.io/maven-central/v/com.cmgapps.android/app-rater?style=for-the-badge)](https://repo1.maven.org/maven2/com/cmgapps/android/app-rater/3.0.2/)
+[![MavenCentral](https://img.shields.io/maven-central/v/com.cmgapps.android/app-rater?style=for-the-badge)](https://repo1.maven.org/maven2/com/cmgapps/android/app-rater/3.1.0/)
 
 __This is a App Rater Dialog to encourage user to rate the app__
 
@@ -11,7 +11,7 @@ Add the following dependency to your `build.gradle`.
 
 ```groovy
 dependencies {
-    implementation 'com.cmgapps.android:app-rater:3.0.2'
+    implementation 'com.cmgapps.android:app-rater:3.1.0'
 }
 ```
 
@@ -62,7 +62,7 @@ Add the following dependency to your `build.gradle`.
 
 ```groovy
 dependencies {
-    implementation 'com.cmgapps.android:app-rater-ktx:3.0.2'
+    implementation 'com.cmgapps.android:app-rater-ktx:3.1.0'
 }
 ```
 
