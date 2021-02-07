@@ -76,8 +76,8 @@ jobs:
           at: .
       - restore-gradle-wrapper
       - run:
-          name: Deploy to Bintray
-          command: ./gradlew bintrayUpload
+          name: Deploy to Sonatype
+          command: ./gradlew publishLibraryMavenPublicationToSonatypeRepository
   createRelease:
     executor: android-executor
     steps:
@@ -104,45 +104,46 @@ workflows:
                 - develop
                 - master
                 - /release\/.*/
-      - hold-deploy:
-          type: approval
-          context:
-            - DockerHub
-          requires:
-            - build-test
-          filters:
-            tags:
-              only: /.*/
-            branches:
-              ignore: /.*/
-      - deploy:
-          context:
-            - DockerHub
-          requires:
-            - hold-deploy
-          filters:
-            tags:
-              only: /.*/
-            branches:
-              ignore: /.*/
-      - hold-release:
-          type: approval
-          context:
-            - DockerHub
-          requires:
-            - deploy
-          filters:
-            tags:
-              only: /.*/
-            branches:
-              ignore: /.*/
-      - createRelease:
-          context:
-            - DockerHub
-          requires:
-            - hold-release
-          filters:
-            tags:
-              only: /.*/
-            branches:
-              ignore: /.*/
+# reenable once signing works
+#      - hold-deploy:
+#          type: approval
+#          context:
+#            - DockerHub
+#          requires:
+#            - build-test
+#          filters:
+#            tags:
+#              only: /.*/
+#            branches:
+#              ignore: /.*/
+#      - deploy:
+#          context:
+#            - DockerHub
+#          requires:
+#            - hold-deploy
+#          filters:
+#            tags:
+#              only: /.*/
+#            branches:
+#              ignore: /.*/
+#      - hold-release:
+#          type: approval
+#          context:
+#            - DockerHub
+#          requires:
+#            - deploy
+#          filters:
+#            tags:
+#              only: /.*/
+#            branches:
+#              ignore: /.*/
+#      - createRelease:
+#          context:
+#            - DockerHub
+#          requires:
+#            - hold-release
+#          filters:
+#            tags:
+#              only: /.*/
+#            branches:
+#              ignore: /.*/

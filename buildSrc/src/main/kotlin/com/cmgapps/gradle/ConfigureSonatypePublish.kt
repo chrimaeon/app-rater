@@ -6,24 +6,21 @@
 
 package com.cmgapps.gradle
 
-import com.jfrog.bintray.gradle.BintrayExtension
-import com.jfrog.bintray.gradle.BintrayPlugin
 import credentials
-import isCI
 import org.gradle.api.Project
 import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.publish.maven.plugins.MavenPublishPlugin
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.kotlin.dsl.apply
-import org.gradle.kotlin.dsl.closureOf
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.get
 import org.gradle.kotlin.dsl.provideDelegate
 import org.gradle.kotlin.dsl.register
-import java.util.Date
+import org.gradle.plugins.signing.SigningExtension
+import org.gradle.plugins.signing.SigningPlugin
 
-fun Project.configureBintrayPublish(pomName: String, pomDesc: String, pomArtifactId: String) {
+fun Project.configureSonatypePublish(pomName: String, pomDesc: String, pomArtifactId: String) {
 
     tasks.register<Jar>("dokkaJavadocJar") {
         val dokkaJavadoc = tasks.named("dokkaJavadoc")
@@ -41,10 +38,11 @@ fun Project.configureBintrayPublish(pomName: String, pomDesc: String, pomArtifac
     }
 
     apply<MavenPublishPlugin>()
+    apply<SigningPlugin>()
 
     configure<PublishingExtension> {
         publications {
-            register<MavenPublication>("pluginMaven") {
+            register<MavenPublication>("libraryMaven") {
 
                 from(components["release"])
                 artifact(tasks["dokkaHtmlJar"])
@@ -58,7 +56,7 @@ fun Project.configureBintrayPublish(pomName: String, pomDesc: String, pomArtifac
                     description.set(pomDesc)
                     developers {
                         developer {
-                            id.set("cgrach")
+                            id.set("chrimaeon")
                             name.set("Christian Grach")
                         }
                     }
@@ -79,41 +77,37 @@ fun Project.configureBintrayPublish(pomName: String, pomDesc: String, pomArtifac
                             distribution.set("repo")
                         }
                     }
+                    issueManagement {
+                        val issuesTrackerUrl: String by project
+                        system.set("github")
+                        url.set(issuesTrackerUrl)
+                    }
+                }
+            }
+        }
+
+        repositories {
+            maven {
+                val versionName: String by project
+
+                name = "sonatype"
+                val releaseUrl =
+                    uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+                val snapshotUrl = uri("https://oss.sonatype.org/content/repositories/snapshots/")
+                url = if (versionName.endsWith("SNAPSHOT")) snapshotUrl else releaseUrl
+
+                val username by credentials()
+                val password by credentials()
+
+                credentials {
+                    this.username = username
+                    this.password = password
                 }
             }
         }
     }
 
-    apply<BintrayPlugin>()
-
-    configure<BintrayExtension> {
-        val user by project.credentials()
-        val key by project.credentials()
-
-        this.user = user
-        this.key = key
-
-        setPublications("pluginMaven")
-
-        pkg(closureOf<BintrayExtension.PackageConfig> {
-
-            val projectUrl: String by project
-            val githubRepo: String by project
-            repo = "maven"
-            name = "${project.group}:$pomArtifactId"
-            userOrg = user
-            setLicenses("Apache-2.0")
-            vcsUrl = projectUrl
-            val issuesTrackerUrl: String by project
-            issueTrackerUrl = issuesTrackerUrl
-            this.githubRepo = githubRepo
-            version(closureOf<BintrayExtension.VersionConfig> {
-                name = project.version as String
-                vcsTag = project.version as String
-                released = Date().toString()
-            })
-        })
-
-        isPublish = !isCI()
+    configure<SigningExtension> {
+        sign(project.extensions.getByType(PublishingExtension::class.java).publications["libraryMaven"])
     }
 }

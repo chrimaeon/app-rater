@@ -22,7 +22,7 @@ plugins {
     kotlin("android")
     id("org.jetbrains.dokka")
     ktlint
-    bintrayPublish
+    sonatypePublish
 }
 
 android {

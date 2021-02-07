@@ -22,7 +22,7 @@ plugins {
     id("com.android.library")
     kotlin("android")
     id("org.jetbrains.dokka")
-    bintrayPublish
+    sonatypePublish
     ktlint
 }
 
@@ -95,6 +95,8 @@ dependencies {
     implementation("androidx.appcompat:appcompat:" + Deps.Versions.APP_COMPAT)
     implementation("androidx.core:core-ktx:" + Deps.Versions.CORE_KTX)
     implementation(kotlin("stdlib-jdk7", Deps.Versions.KOTLIN))
+    // Necessary to bump a transitive dependency.
+    compileOnly(kotlin("reflect", Deps.Versions.KOTLIN))
 
     testImplementation("junit:junit:${Deps.Versions.JUNIT}")
     testImplementation("androidx.test:core:${Deps.Versions.TEST_CORE}")

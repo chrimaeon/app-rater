@@ -1,7 +1,7 @@
 # Android&trade; App Rater Dialog [![CircleCI](https://circleci.com/gh/chrimaeon/app-rater.svg?style=svg)](https://circleci.com/gh/chrimaeon/app-rater)
 
 [![License](https://img.shields.io/badge/license-Apache%202.0-brightgreen.svg?style=for-the-badge&logo=apache)](http://www.apache.org/licenses/LICENSE-2.0)
-[![Bintray](https://www.cmgapps.com/badge/chrimaeon/maven/com.cmgapps.android:app-rater/badge.svg)](https://jcenter.bintray.com/com/cmgapps/android/app-rater/)
+[![MavenCentral](https://img.shields.io/maven-central/v/com.cmgapps.android/app-rater?style=for-the-badge)](https://repo1.maven.org/maven2/com/cmgapps/android/app-rater/3.0.2/)
 
 __This is a App Rater Dialog to encourage user to rate the app__
 

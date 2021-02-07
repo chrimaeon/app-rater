@@ -27,5 +27,5 @@ afterEvaluate {
     val pomDesc: String by project
     val pomArtifactId: String by project
 
-    configureBintrayPublish(pomName, pomDesc, pomArtifactId)
+    configureSonatypePublish(pomName, pomDesc, pomArtifactId)
 }

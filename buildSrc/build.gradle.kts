@@ -16,14 +16,18 @@
 
 plugins {
     `kotlin-dsl`
+    kotlin("plugin.serialization") version embeddedKotlinVersion
 }
 
 repositories {
     google()
     jcenter()
+    mavenCentral()
 }
 
 dependencies {
-    implementation(kotlin("stdlib-jdk8", "1.4.21"))
-    implementation("com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.5")
+    implementation(kotlin("stdlib-jdk8", "1.4.30"))
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.1")
+    implementation("com.squareup.okhttp3:okhttp:4.9.1")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.9.1")
 }
