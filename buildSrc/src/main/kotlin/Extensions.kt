@@ -6,5 +6,9 @@
 
 import org.gradle.plugin.use.PluginDependenciesSpec
 
-fun PluginDependenciesSpec.ktlint() = id("com.cmgapps.gradle.ktlint")
-fun PluginDependenciesSpec.bintrayPublish() = id("com.cmgapps.gradle.bintray-publish")
+inline val PluginDependenciesSpec.ktlint: org.gradle.plugin.use.PluginDependencySpec
+    get() = id("com.cmgapps.gradle.ktlint")
+inline val PluginDependenciesSpec.sonatypePublish: org.gradle.plugin.use.PluginDependencySpec
+    get() = id("com.cmgapps.gradle.sonatype-publish")
+
+fun isCI(): Boolean = System.getenv("CI") != null

@@ -26,6 +26,7 @@ import android.os.Build
 import android.text.format.DateUtils
 import android.util.Log
 import android.view.MotionEvent
+import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AlertDialog
 import com.cmgapps.android.apprater.databinding.DialogContentBinding
 import com.cmgapps.android.apprater.store.GooglePlayStore
@@ -184,10 +185,21 @@ class AppRater private constructor(builder: Builder) {
      * * debug = false
      *
      */
-    class Builder @JvmOverloads constructor(
-        internal val context: Context,
-        internal val clock: Clock = SystemClock()
-    ) {
+    class Builder {
+        constructor(context: Context) {
+            this.context = context
+            this.clock = SystemClock()
+        }
+
+        @VisibleForTesting
+        internal constructor(context: Context, clock: Clock) {
+            this.context = context
+            this.clock = clock
+        }
+
+        internal val context: Context
+        internal val clock: Clock
+
         internal var store: Store = GooglePlayStore()
             private set
 

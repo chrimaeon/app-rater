@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- Move deployment to MavenCentral
 
 ### Deprecated
 

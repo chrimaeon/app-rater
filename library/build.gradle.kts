@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("com.android.library")
     kotlin("android")
-    bintrayPublish()
-    ktlint()
+    id("org.jetbrains.dokka")
+    sonatypePublish
+    ktlint
 }
 
 android {
@@ -49,18 +52,17 @@ android {
     }
 
     compileOptions {
-//        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
 
     }
 
     testOptions {
-//        unitTests.all(closureOf<Test> {
-//            testLogging {
-//                events(TestLogEvent.PASSED, TestLogEvent.FAILED, TestLogEvent.SKIPPED)
-//            }
-//        }.cast())
+        unitTests.all { test ->
+            test.testLogging {
+                events(TestLogEvent.PASSED, TestLogEvent.FAILED, TestLogEvent.SKIPPED)
+            }
+        }
     }
 }
 
@@ -71,10 +73,21 @@ tasks {
         }
     }
 
-    afterEvaluate {
-        named<Jar>("androidSourcesJar") {
-            from(android.sourceSets["main"].java.srcDirs)
+    withType<DokkaTask> {
+        moduleName.set("app-rater")
+        dokkaSourceSets {
+            named("main") {
+                noAndroidSdkLink.set(false)
+            }
+            named("debug") {
+                suppress.set(true)
+            }
         }
+    }
+
+    register<Jar>("sourcesJar") {
+        from(android.sourceSets["main"].java.srcDirs)
+        archiveClassifier.set("sources")
     }
 }
 
@@ -82,8 +95,8 @@ dependencies {
     implementation("androidx.appcompat:appcompat:" + Deps.Versions.APP_COMPAT)
     implementation("androidx.core:core-ktx:" + Deps.Versions.CORE_KTX)
     implementation(kotlin("stdlib-jdk7", Deps.Versions.KOTLIN))
-
-//    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:" + Deps.Versions.DESUGAR_JDK_LIBS)
+    // Necessary to bump a transitive dependency.
+    compileOnly(kotlin("reflect", Deps.Versions.KOTLIN))
 
     testImplementation("junit:junit:${Deps.Versions.JUNIT}")
     testImplementation("androidx.test:core:${Deps.Versions.TEST_CORE}")

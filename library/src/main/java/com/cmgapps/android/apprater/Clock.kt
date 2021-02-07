@@ -16,10 +16,10 @@
 
 package com.cmgapps.android.apprater
 
-interface Clock {
+internal interface Clock {
     fun millis(): Long
 }
 
-class SystemClock : Clock {
+internal class SystemClock : Clock {
     override fun millis() = System.currentTimeMillis()
 }

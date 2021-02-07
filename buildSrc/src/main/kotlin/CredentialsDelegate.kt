@@ -27,7 +27,7 @@ class CredentialsDelegate(propertiesFile: File) : ReadOnlyProperty<Any?, String?
             return properties.getProperty(property.name)
         }
 
-        return System.getenv("BINTRAY_${property.name.toUpperCase(Locale.ROOT)}")
+        return System.getenv("SONATYPE_${property.name.toUpperCase(Locale.ROOT)}")
     }
 }
 
