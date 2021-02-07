@@ -26,6 +26,23 @@ afterEvaluate {
     val pomName: String by project
     val pomDesc: String by project
     val pomArtifactId: String by project
+    val projectUrl: String by project
+    val pomScmConnection: String by project
+    val pomScmDevConnection: String by project
+    val pomScmUrl: String by project
+    val pomIssuesTrackerUrl: String by project
 
-    configureSonatypePublish(pomName, pomDesc, pomArtifactId)
+    val values = PomValues(
+        name = pomName,
+        desc = pomDesc,
+        artivactId = pomArtifactId,
+        url = projectUrl,
+        version = versionName,
+        scmConnection = pomScmConnection,
+        scmDevConnection = pomScmDevConnection,
+        scmUrl = pomScmUrl,
+        issuesTrackerUrl = pomIssuesTrackerUrl
+    )
+
+    configureSonatypePublish(values)
 }
