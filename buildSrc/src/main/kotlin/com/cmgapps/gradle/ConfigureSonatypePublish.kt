@@ -20,7 +20,19 @@ import org.gradle.kotlin.dsl.register
 import org.gradle.plugins.signing.SigningExtension
 import org.gradle.plugins.signing.SigningPlugin
 
-fun Project.configureSonatypePublish(pomName: String, pomDesc: String, pomArtifactId: String) {
+data class PomValues(
+    val name: String,
+    val desc: String,
+    val version: String,
+    val artivactId: String,
+    val url: String,
+    val scmConnection: String,
+    val scmDevConnection: String,
+    val scmUrl: String,
+    val issuesTrackerUrl: String
+)
+
+fun Project.configureSonatypePublish(values: PomValues) {
 
     tasks.register<Jar>("dokkaJavadocJar") {
         val dokkaJavadoc = tasks.named("dokkaJavadoc")
@@ -31,7 +43,6 @@ fun Project.configureSonatypePublish(pomName: String, pomDesc: String, pomArtifa
 
     tasks.register<Jar>("dokkaHtmlJar") {
         val dokkaHtml = tasks.named("dokkaHtml")
-
         dependsOn(dokkaHtml)
         from(dokkaHtml)
         archiveClassifier.set("html-doc")
@@ -40,47 +51,47 @@ fun Project.configureSonatypePublish(pomName: String, pomDesc: String, pomArtifa
     apply<MavenPublishPlugin>()
     apply<SigningPlugin>()
 
+    val pubName = "libraryMaven"
     configure<PublishingExtension> {
         publications {
-            register<MavenPublication>("libraryMaven") {
+            register<MavenPublication>(pubName) {
 
                 from(components["release"])
                 artifact(tasks["dokkaHtmlJar"])
                 artifact(tasks["dokkaJavadocJar"])
                 artifact(tasks["sourcesJar"])
 
-                artifactId = pomArtifactId
+                artifactId = values.artivactId
 
                 pom {
-                    name.set(pomName)
-                    description.set(pomDesc)
+                    name.set(values.name)
+                    description.set(values.desc)
+                    url.set(values.url)
+
                     developers {
                         developer {
                             id.set("chrimaeon")
                             name.set("Christian Grach")
+                            email.set("christian.grach@cmgapps.com")
                         }
                     }
+
                     scm {
-                        val pomScmConnection: String by project
-                        connection.set(pomScmConnection)
-                        val pomScmDevConnection: String by project
-                        developerConnection.set(pomScmDevConnection)
-                        val pomScmUrl: String by project
-                        url.set(pomScmUrl)
+                        connection.set(values.scmConnection)
+                        developerConnection.set(values.scmDevConnection)
+                        url.set(values.scmUrl)
                     }
+
                     licenses {
                         license {
-                            val pomLicenseName: String by project
-                            name.set(pomLicenseName)
-                            val pomLicenseUrl: String by project
-                            url.set(pomLicenseUrl)
-                            distribution.set("repo")
+                            name.set("Apache License, Version 2.0")
+                            url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
                         }
                     }
+
                     issueManagement {
-                        val issuesTrackerUrl: String by project
                         system.set("github")
-                        url.set(issuesTrackerUrl)
+                        url.set(values.issuesTrackerUrl)
                     }
                 }
             }
@@ -88,13 +99,11 @@ fun Project.configureSonatypePublish(pomName: String, pomDesc: String, pomArtifa
 
         repositories {
             maven {
-                val versionName: String by project
-
                 name = "sonatype"
                 val releaseUrl =
                     uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
                 val snapshotUrl = uri("https://oss.sonatype.org/content/repositories/snapshots/")
-                url = if (versionName.endsWith("SNAPSHOT")) snapshotUrl else releaseUrl
+                url = if (values.version.endsWith("SNAPSHOT")) snapshotUrl else releaseUrl
 
                 val username by credentials()
                 val password by credentials()
@@ -108,6 +117,6 @@ fun Project.configureSonatypePublish(pomName: String, pomDesc: String, pomArtifa
     }
 
     configure<SigningExtension> {
-        sign(project.extensions.getByType(PublishingExtension::class.java).publications["libraryMaven"])
+        sign(project.extensions.getByType(PublishingExtension::class.java).publications[pubName])
     }
 }
