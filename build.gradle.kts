@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-import com.cmgapps.gradle.sendCreateReleaseRequest
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import org.gradle.api.tasks.wrapper.Wrapper.DistributionType
 
 buildscript {
     repositories {
         google()
-        jcenter()
         mavenCentral()
     }
 
@@ -39,7 +37,6 @@ plugins {
 
 allprojects {
     repositories {
-        jcenter()
         google()
         mavenCentral()
     }
@@ -63,25 +60,9 @@ tasks {
         distributionType = DistributionType.ALL
         gradleVersion = Deps.Versions.GRADLE
     }
-
-    register("createGithubRelease") {
-        val versionName: String by project
-        if (!changelog.has(versionName)) {
-            dependsOn(patchChangelog)
-        }
-        doLast {
-            val changelog = changelog.get(versionName).toText()
-            sendCreateReleaseRequest(
-                versionName,
-                changelog
-            )?.let {
-                logger.lifecycle(it.htmlUrl)
-            }
-        }
-    }
 }
 
 changelog {
     val versionName: String by project
-    version = versionName
+    version.set(versionName)
 }

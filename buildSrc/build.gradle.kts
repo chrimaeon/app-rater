@@ -14,32 +14,23 @@
  * limitations under the License.
  */
 
-import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
-
 plugins {
     `kotlin-dsl`
     kotlin("plugin.serialization") version embeddedKotlinVersion
-    id("com.github.ben-manes.versions") version "0.36.0"
 }
 
 repositories {
     google()
-    jcenter()
     mavenCentral()
 }
 
-tasks.withType<DependencyUpdatesTask> {
-    revision = "release"
-    rejectVersionIf {
-        listOf("alpha", "beta", "rc", "cr", "m", "preview", "b", "ea", "dev").any { qualifier ->
-            candidate.version.matches(Regex("(?i).*[.-]$qualifier[.\\d-+]*"))
-        }
+tasks {
+    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+        targetCompatibility = JavaVersion.VERSION_1_8.toString()
     }
-}
 
-dependencies {
-    implementation(embeddedKotlin("stdlib-jdk8"))
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.1")
-    implementation("com.squareup.okhttp3:okhttp:4.9.1")
-    implementation("com.squareup.okhttp3:logging-interceptor:4.9.1")
+    withType<JavaCompile> {
+        sourceCompatibility = JavaVersion.VERSION_1_8.toString()
+        targetCompatibility = JavaVersion.VERSION_1_8.toString()
+    }
 }

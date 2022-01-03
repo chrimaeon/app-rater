@@ -37,7 +37,7 @@ fun Project.configureKtlint() {
 
             group = "Formatting"
             description = "Fix Kotlin code style deviations."
-            main = "com.pinterest.ktlint.Main"
+            mainClass.set("com.pinterest.ktlint.Main")
             classpath = ktlint
             args = listOf("-F", "src/**/*.kt")
         }
@@ -48,7 +48,7 @@ fun Project.configureKtlint() {
 
             group = "Verification"
             description = "Check Kotlin code style."
-            main = "com.pinterest.ktlint.Main"
+            mainClass.set("com.pinterest.ktlint.Main")
             classpath = ktlint
             args = listOf(
                 "src/**/*.kt",

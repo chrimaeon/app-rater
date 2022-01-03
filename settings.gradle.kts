@@ -14,5 +14,5 @@
  * limitations under the License.
  */
 
-rootProject.name = "App-Rater"
+rootProject.name = "Android App Rater"
 include(":sample", ":library", ":library-ktx")
