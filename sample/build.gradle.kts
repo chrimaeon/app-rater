@@ -23,13 +23,13 @@ plugins {
 }
 
 android {
-    compileSdk = Deps.Versions.COMPILE_SDK_VERSION
-    buildToolsVersion = Deps.Versions.BUILD_TOOLS_VERSION
+    compileSdk = Versions.COMPILE_SDK_VERSION
+    buildToolsVersion = Versions.BUILD_TOOLS_VERSION
 
     defaultConfig {
         applicationId = "com.cmgapps.android.appratersample"
         minSdk = 21
-        targetSdk = Deps.Versions.TARGET_SDK_VERSION
+        targetSdk = Versions.TARGET_SDK_VERSION
         versionCode = 1
         versionName = "1.0"
 
@@ -61,10 +61,9 @@ tasks.withType<KotlinCompile> {
 }
 
 dependencies {
-    implementation(project(":library-ktx"))
-    implementation("androidx.appcompat:appcompat:${Deps.Versions.APP_COMPAT}")
-    implementation("androidx.core:core-ktx:${Deps.Versions.CORE_KTX}")
-    implementation("androidx.lifecycle:lifecycle-extensions:${Deps.Versions.LIFECYCLE_EXT}")
-    implementation("androidx.lifecycle:lifecycle-common-java8:${Deps.Versions.LIFECYCLE_COMMON}")
-    implementation(kotlin("stdlib-jdk7", Deps.Versions.KOTLIN))
+    implementation(projects.libraryKtx)
+    implementation(libs.androidx.appCompat)
+    implementation(libs.androidx.coreKtx)
+    implementation(libs.androidx.lifecycle.extensions)
+    implementation(libs.androidx.lifecycle.commonJava8)
 }

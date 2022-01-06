@@ -16,20 +16,24 @@
 
 package com.cmgapps.gradle
 
-import Deps
 import org.gradle.api.Project
+import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.api.tasks.JavaExec
 import org.gradle.kotlin.dsl.dependencies
+import org.gradle.kotlin.dsl.getByType
 import org.gradle.kotlin.dsl.invoke
 import org.gradle.kotlin.dsl.register
 
+@Suppress("UnstableApiUsage")
 fun Project.configureKtlint() {
     val ktlint = configurations.create("ktlint")
 
     tasks {
 
-        val inputFiles = fileTree(mapOf("dir" to "src", "include" to "**/*.kt"))
-        val outputDir = "${buildDir}/reports"
+        val inputFiles = fileTree("src") {
+            include("**/*.kt")
+        }
+        val outputDir = buildDir.resolve("reports")
 
         register<JavaExec>("ktlintFormat") {
             inputs.files(inputFiles)
@@ -53,7 +57,7 @@ fun Project.configureKtlint() {
             args = listOf(
                 "src/**/*.kt",
                 "--reporter=plain",
-                "--reporter=html,output=${outputDir}/ktlint.html"
+                "--reporter=html,output=$outputDir/ktlint.html"
             )
         }
 
@@ -63,6 +67,7 @@ fun Project.configureKtlint() {
     }
 
     dependencies {
-        ktlint("com.pinterest:ktlint:" + Deps.Versions.KTLINT)
+        val libs = project.extensions.getByType<VersionCatalogsExtension>().named("libs")
+        dependencies.add(ktlint.name, libs.findDependency("ktlint").orElseThrow())
     }
 }

@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@file:Suppress("UnstableApiUsage")
+
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import org.gradle.api.tasks.wrapper.Wrapper.DistributionType
 
@@ -24,15 +26,15 @@ buildscript {
     }
 
     dependencies {
-        classpath("com.android.tools.build:gradle:" + Deps.Versions.ANDROID_PLUGIN)
-        classpath(kotlin("gradle-plugin", version = Deps.Versions.KOTLIN))
+        classpath(libs.androidPluginDep)
+        classpath(libs.kotlinPluginDep)
     }
 }
 
 plugins {
-    id("com.github.ben-manes.versions") version Deps.Versions.VERSIONS_PLUGIN
-    id("org.jetbrains.changelog") version Deps.Versions.CHANGELOG_PLUGIN
-    id("org.jetbrains.dokka") version Deps.Versions.DOKKA_PLUGIN apply false
+    alias(libs.plugins.benManesVersions)
+    alias(libs.plugins.changelog)
+    alias(libs.plugins.dokka) apply false
 }
 
 allprojects {
@@ -58,7 +60,7 @@ tasks {
 
     named<Wrapper>("wrapper") {
         distributionType = DistributionType.ALL
-        gradleVersion = Deps.Versions.GRADLE
+        gradleVersion = libs.versions.gradle.get()
     }
 }
 

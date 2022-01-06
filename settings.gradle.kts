@@ -14,5 +14,8 @@
  * limitations under the License.
  */
 
-rootProject.name = "Android App Rater"
+enableFeaturePreview("VERSION_CATALOGS")
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+
+rootProject.name = "Android-App-Rater"
 include(":sample", ":library", ":library-ktx")

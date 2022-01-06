@@ -15,6 +15,7 @@
  */
 
 import org.gradle.api.tasks.testing.logging.TestLogEvent
+import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -26,11 +27,11 @@ plugins {
 }
 
 android {
-    compileSdkVersion(Deps.Versions.COMPILE_SDK_VERSION)
-    buildToolsVersion(Deps.Versions.BUILD_TOOLS_VERSION)
+    compileSdk = Versions.COMPILE_SDK_VERSION
+    buildToolsVersion = Versions.BUILD_TOOLS_VERSION
 
     defaultConfig {
-        minSdkVersion(Deps.Versions.MIN_SDK_VERSION)
+        minSdk = Versions.MIN_SDK_VERSION
     }
 
     buildFeatures {
@@ -49,13 +50,13 @@ android {
 }
 
 tasks {
-    withType(KotlinCompile::class).all {
+    withType<KotlinCompile> {
         kotlinOptions {
             jvmTarget = "1.8"
         }
     }
 
-    withType<org.jetbrains.dokka.gradle.DokkaTask> {
+    withType<DokkaTask> {
         moduleName.set("app-rater-ktx")
         dokkaSourceSets {
             named("main") {
@@ -74,6 +75,5 @@ tasks {
 }
 
 dependencies {
-    api(project(":library"))
-    implementation(kotlin("stdlib-jdk7", Deps.Versions.KOTLIN))
+    api(projects.library)
 }

@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- target SDK 31 (Android 12)
 
 ### Deprecated
 
