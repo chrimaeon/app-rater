@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- Use `Context#applicationContext` in `Builder`
 - target SDK 31 (Android 12)
 
 ### Deprecated
