@@ -27,12 +27,12 @@ plugins {
 }
 
 android {
-    compileSdkVersion(Deps.Versions.COMPILE_SDK_VERSION)
-    buildToolsVersion(Deps.Versions.BUILD_TOOLS_VERSION)
+    compileSdk = Deps.Versions.COMPILE_SDK_VERSION
+    buildToolsVersion = Deps.Versions.BUILD_TOOLS_VERSION
 
     defaultConfig {
-        minSdkVersion(Deps.Versions.MIN_SDK_VERSION)
-        targetSdkVersion(Deps.Versions.TARGET_SDK_VERSION)
+        minSdk = Deps.Versions.MIN_SDK_VERSION
+        targetSdk = Deps.Versions.TARGET_SDK_VERSION
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -94,7 +94,6 @@ tasks {
 dependencies {
     implementation("androidx.appcompat:appcompat:" + Deps.Versions.APP_COMPAT)
     implementation("androidx.core:core-ktx:" + Deps.Versions.CORE_KTX)
-    implementation(kotlin("stdlib-jdk7", Deps.Versions.KOTLIN))
     // Necessary to bump a transitive dependency.
     compileOnly(kotlin("reflect", Deps.Versions.KOTLIN))
 

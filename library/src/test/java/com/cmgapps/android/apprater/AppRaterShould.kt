@@ -44,6 +44,9 @@ class AppRaterShould {
     lateinit var mockContext: Context
 
     @Mock
+    lateinit var mockAppContext: Context
+
+    @Mock
     lateinit var mockSharedPreferences: SharedPreferences
 
     @Mock
@@ -56,15 +59,16 @@ class AppRaterShould {
 
     @Before
     fun setup() {
+        `when`(mockContext.applicationContext).thenReturn(mockAppContext)
 
-        `when`(mockContext.getSharedPreferences(anyString(), anyInt()))
+        `when`(mockAppContext.getSharedPreferences(anyString(), anyInt()))
             .thenReturn(mockSharedPreferences)
 
-        `when`(mockContext.packageName).thenReturn("com.cmgapps")
+        `when`(mockAppContext.packageName).thenReturn("com.cmgapps")
 
         `when`(mockSharedPreferences.edit()).thenReturn(mockEditor)
 
-        `when`(mockContext.packageManager)
+        `when`(mockAppContext.packageManager)
             .thenReturn(mockPackageManager)
     }
 
