@@ -4,6 +4,19 @@
 ### Added
 
 ### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## [3.2.0]
+### Added
+
+### Changed
 - Use `Context#applicationContext` in `Builder`
 - target SDK 31 (Android 12)
 
@@ -14,43 +27,15 @@
 ### Fixed
 
 ### Security
-## [3.1.0]
-### Added
 
+## [3.1.0]
 ### Changed
 - Move deployment to MavenCentral
 
-### Deprecated
-
-### Removed
-
-### Fixed
-
-### Security
 ## [3.0.2]
-### Added
-
 ### Changed
 - add JmvOverloads to Builder constructor
 
-### Deprecated
-
-### Removed
-
-### Fixed
-
-### Security
 ## [3.0.1]
-### Added
-
-### Changed
-
-### Deprecated
-
-### Removed
-
 ### Fixed
 - styling the dialog text
-
-
-### Security
