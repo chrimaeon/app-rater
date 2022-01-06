@@ -1,0 +1,136 @@
+name: Build & test
+on:
+  push:
+    branches:
+      - master
+      - develop
+      - "release/**"
+      - "hotfix/**"
+  workflow_dispatch:
+
+jobs:
+  checkAndUnitTest:
+    runs-on: ubuntu-latest
+
+    steps:
+      # region Setup
+      - uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Gradle Cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches/modules-*
+            ~/.gradle/caches/jars-*
+            ~/.gradle/caches/build-cache-*
+          key: gradle-${{ hashFiles('**/build.gradle.*', '**/Deps.kts') }}
+
+      - name: Gradle Wrapper Cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}
+
+      - name: Download dependencies
+        run: ./gradlew dependencies
+
+      - name: Check
+        run: ./gradlew check
+      - name: Archive Test results
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: common-test-results
+          path: |
+            **/build/reports/*
+            **/build/test-results/*
+
+  connectedAndroidAppTest:
+    runs-on: macos-11
+
+    strategy:
+      matrix:
+        api-level: [ 26, 29, 31 ]
+        target: [ default, google_apis ]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Gradle Cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches/modules-*
+            ~/.gradle/caches/jars-*
+            ~/.gradle/caches/build-cache-*
+          key: gradle-${{ hashFiles('**/build.gradle.*', '**/Deps.kts') }}
+
+      - name: Gradle Wrapper Cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}
+
+      - name: AVD cache
+        uses: actions/cache@v2
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: app-avd-${{ matrix.api-level }}-${{ matrix.target }}
+
+      - name: Create AVD and generate snapshot for caching
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          target: ${{ matrix.target }}
+          arch: x86_64
+          profile: Nexus 6
+          force-avd-creation: false
+          avd-name: nexus6-${{matrix.api-level}}-${{ matrix.target }}
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          script: echo "Generated AVD snapshot for caching."
+
+      - name: Download dependencies
+        run: ./gradlew dependencies
+
+      - name: Run connected Android tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          target: ${{ matrix.target }}
+          arch: x86_64
+          profile: Nexus 6
+          force-avd-creation: false
+          avd-name: nexus6-${{matrix.api-level}}-${{ matrix.target }}
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          script: adb logcat >logcat.txt & ./gradlew :library:connectedCheck
+
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: logs-android-${{ matrix.api-level }}-${{ matrix.target }}
+          path: logcat.txt
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-results-android-${{ matrix.api-level }}-${{ matrix.target }}
+          path: |
+            **/build/reports/*
