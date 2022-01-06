@@ -23,17 +23,17 @@ plugins {
 }
 
 android {
-    compileSdkVersion(Deps.Versions.COMPILE_SDK_VERSION)
-    buildToolsVersion(Deps.Versions.BUILD_TOOLS_VERSION)
+    compileSdk = Deps.Versions.COMPILE_SDK_VERSION
+    buildToolsVersion = Deps.Versions.BUILD_TOOLS_VERSION
 
     defaultConfig {
         applicationId = "com.cmgapps.android.appratersample"
-        minSdkVersion(21)
-        targetSdkVersion(Deps.Versions.TARGET_SDK_VERSION)
+        minSdk = 21
+        targetSdk = Deps.Versions.TARGET_SDK_VERSION
         versionCode = 1
         versionName = "1.0"
 
-        resConfigs("en")
+        resourceConfigurations.add("en")
     }
 
     @Suppress("UnstableApiUsage")

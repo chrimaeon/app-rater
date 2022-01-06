@@ -47,14 +47,12 @@ android {
     buildTypes {
         named("release") {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
         }
     }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
-
     }
 
     testOptions {
@@ -93,7 +91,6 @@ tasks {
 
 dependencies {
     implementation("androidx.appcompat:appcompat:" + Deps.Versions.APP_COMPAT)
-    implementation("androidx.core:core-ktx:" + Deps.Versions.CORE_KTX)
     // Necessary to bump a transitive dependency.
     compileOnly(kotlin("reflect", Deps.Versions.KOTLIN))
 
