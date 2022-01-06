@@ -26,6 +26,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.mock
+import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
@@ -34,10 +35,14 @@ class AppRaterBuilderShould {
     @Mock
     lateinit var mockContext: Context
 
+    @Mock
+    lateinit var mockAppContext: Context
+
     private lateinit var builder: AppRater.Builder
 
     @Before
     fun setup() {
+        `when`(mockContext.applicationContext).thenReturn(mockAppContext)
         builder = AppRater.Builder(mockContext)
     }
 

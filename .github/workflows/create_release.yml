@@ -1,0 +1,46 @@
+name: Create Github Release
+
+on:
+  push:
+    tags:
+      - '**'
+  workflow_dispatch:
+
+jobs:
+  create-github-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Create Release Notes
+        run: ./gradlew --quiet getChangelog --no-header > ./RELEASE_NOTES.md
+      - name: Create Release
+        id: create_release
+        uses: chrimaeon/github-create-release-action@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          tag_name: ${{ github.ref }}
+          body_file: ./RELEASE_NOTES.md
+      - name: Notify Slack
+        uses: chrimaeon/github-slack-action@v1
+        with:
+          slack_token: ${{ secrets.SLACK_TOKEN }}
+          channel: ${{ secrets.SLACK_CHANNEL }}
+          text: "${{ github.ref_name }} released on ${{ github.repository }} :raised_hands:"
+          blocks: |
+            [
+              {
+                "type": "header",
+                "text": {
+                  "type": "plain_text",
+                  "text": "${{ github.ref_name }} released on ${{ github.repository }} :raised_hands:"
+                }
+              },
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "*URL*\n${{ steps.create_release.outputs.html_url }}"
+                }
+              }
+            ]

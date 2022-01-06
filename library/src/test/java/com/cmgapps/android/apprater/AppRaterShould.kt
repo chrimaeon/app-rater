@@ -31,18 +31,20 @@ import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
 import org.mockito.Mockito.eq
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
+import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 
-@Suppress("DEPRECATION")
 @RunWith(MockitoJUnitRunner::class)
 class AppRaterShould {
 
     @Mock
     lateinit var mockContext: Context
+
+    @Mock
+    lateinit var mockAppContext: Context
 
     @Mock
     lateinit var mockSharedPreferences: SharedPreferences
@@ -57,15 +59,16 @@ class AppRaterShould {
 
     @Before
     fun setup() {
+        `when`(mockContext.applicationContext).thenReturn(mockAppContext)
 
-        `when`(mockContext.getSharedPreferences(anyString(), anyInt()))
+        `when`(mockAppContext.getSharedPreferences(anyString(), anyInt()))
             .thenReturn(mockSharedPreferences)
 
-        `when`(mockContext.packageName).thenReturn("com.cmgapps")
+        `when`(mockAppContext.packageName).thenReturn("com.cmgapps")
 
         `when`(mockSharedPreferences.edit()).thenReturn(mockEditor)
 
-        `when`(mockContext.packageManager)
+        `when`(mockAppContext.packageManager)
             .thenReturn(mockPackageManager)
     }
 
@@ -74,6 +77,7 @@ class AppRaterShould {
 
         val trackingVersion = 1L
         val packageInfo = PackageInfo()
+        @Suppress("DEPRECATION")
         packageInfo.versionCode = trackingVersion.toInt()
 
         `when`(mockPackageManager.getPackageInfo("com.cmgapps", 0))
@@ -101,6 +105,7 @@ class AppRaterShould {
         val trackingVersion = 1L
 
         val packageInfo = PackageInfo()
+        @Suppress("DEPRECATION")
         packageInfo.versionCode = trackingVersion.toInt()
 
         `when`(mockPackageManager.getPackageInfo("com.cmgapps", 0))
@@ -126,6 +131,7 @@ class AppRaterShould {
         val newTrackingVersion = oldTrackingVersion + 1
 
         val packageInfo = PackageInfo()
+        @Suppress("DEPRECATION")
         packageInfo.versionCode = newTrackingVersion.toInt()
 
         `when`(mockPackageManager.getPackageInfo("com.cmgapps", 0))
@@ -151,6 +157,7 @@ class AppRaterShould {
         val trackingVersion = 1
 
         val packageInfo = PackageInfo()
+        @Suppress("DEPRECATION")
         packageInfo.versionCode = trackingVersion
 
         `when`(mockPackageManager.getPackageInfo("com.cmgapps", 0))
@@ -176,6 +183,7 @@ class AppRaterShould {
         val trackingVersion = 1
 
         val packageInfo = PackageInfo()
+        @Suppress("DEPRECATION")
         packageInfo.versionCode = trackingVersion
 
         `when`(mockPackageManager.getPackageInfo("com.cmgapps", 0))
@@ -192,6 +200,7 @@ class AppRaterShould {
         val trackingVersion = 1
 
         val packageInfo = PackageInfo()
+        @Suppress("DEPRECATION")
         packageInfo.versionCode = trackingVersion
 
         `when`(mockPackageManager.getPackageInfo("com.cmgapps", 0))
@@ -211,6 +220,7 @@ class AppRaterShould {
         val trackingVersion = 1
 
         val packageInfo = PackageInfo()
+        @Suppress("DEPRECATION")
         packageInfo.versionCode = trackingVersion
 
         `when`(mockPackageManager.getPackageInfo("com.cmgapps", 0))
@@ -232,6 +242,7 @@ class AppRaterShould {
         val trackingVersion = 1
 
         val packageInfo = PackageInfo()
+        @Suppress("DEPRECATION")
         packageInfo.versionCode = trackingVersion
 
         `when`(mockPackageManager.getPackageInfo("com.cmgapps", 0))
@@ -256,6 +267,7 @@ class AppRaterShould {
         val daysUntilPrompt = 3
 
         val packageInfo = PackageInfo()
+        @Suppress("DEPRECATION")
         packageInfo.versionCode = trackingVersion
 
         `when`(mockPackageManager.getPackageInfo("com.cmgapps", 0))
@@ -286,6 +298,7 @@ class AppRaterShould {
         }
 
         val packageInfo = PackageInfo()
+        @Suppress("DEPRECATION")
         packageInfo.versionCode = trackingVersion
 
         `when`(mockPackageManager.getPackageInfo("com.cmgapps", 0))
@@ -310,6 +323,7 @@ class AppRaterShould {
     fun `manually set 'rated'`() {
         val trackingVersion = 1L
         val packageInfo = PackageInfo()
+        @Suppress("DEPRECATION")
         packageInfo.versionCode = trackingVersion.toInt()
 
         `when`(mockPackageManager.getPackageInfo("com.cmgapps", 0))

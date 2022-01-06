@@ -187,13 +187,13 @@ class AppRater private constructor(builder: Builder) {
      */
     class Builder {
         constructor(context: Context) {
-            this.context = context
+            this.context = context.applicationContext
             this.clock = SystemClock()
         }
 
         @VisibleForTesting
         internal constructor(context: Context, clock: Clock) {
-            this.context = context
+            this.context = context.applicationContext
             this.clock = clock
         }
 

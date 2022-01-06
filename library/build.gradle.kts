@@ -27,12 +27,12 @@ plugins {
 }
 
 android {
-    compileSdkVersion(Deps.Versions.COMPILE_SDK_VERSION)
-    buildToolsVersion(Deps.Versions.BUILD_TOOLS_VERSION)
+    compileSdk = Versions.COMPILE_SDK_VERSION
+    buildToolsVersion = Versions.BUILD_TOOLS_VERSION
 
     defaultConfig {
-        minSdkVersion(Deps.Versions.MIN_SDK_VERSION)
-        targetSdkVersion(Deps.Versions.TARGET_SDK_VERSION)
+        minSdk = Versions.MIN_SDK_VERSION
+        targetSdk = Versions.TARGET_SDK_VERSION
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -47,14 +47,12 @@ android {
     buildTypes {
         named("release") {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
         }
     }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
-
     }
 
     testOptions {
@@ -67,7 +65,7 @@ android {
 }
 
 tasks {
-    withType(KotlinCompile::class).all {
+    withType<KotlinCompile> {
         kotlinOptions {
             jvmTarget = "1.8"
         }
@@ -92,18 +90,16 @@ tasks {
 }
 
 dependencies {
-    implementation("androidx.appcompat:appcompat:" + Deps.Versions.APP_COMPAT)
-    implementation("androidx.core:core-ktx:" + Deps.Versions.CORE_KTX)
-    implementation(kotlin("stdlib-jdk7", Deps.Versions.KOTLIN))
+    implementation(libs.androidx.appCompat)
     // Necessary to bump a transitive dependency.
-    compileOnly(kotlin("reflect", Deps.Versions.KOTLIN))
+    compileOnly(kotlin("reflect", libs.versions.kotlin.get()))
 
-    testImplementation("junit:junit:${Deps.Versions.JUNIT}")
-    testImplementation("androidx.test:core:${Deps.Versions.TEST_CORE}")
-    testImplementation("org.mockito:mockito-core:${Deps.Versions.MOCKITO_CORE}")
-    testImplementation("org.hamcrest:hamcrest:${Deps.Versions.HAMCREST}")
+    testImplementation(libs.junit)
+    testImplementation(libs.androidx.test.core)
+    testImplementation(libs.mockito)
+    testImplementation(libs.hamcrest)
 
-    androidTestImplementation("androidx.test:runner:${Deps.Versions.TEST_RUNNER}")
-    androidTestImplementation("androidx.test.ext:junit-ktx:${Deps.Versions.JUNIT_KTX}")
-    androidTestImplementation("androidx.test.espresso:espresso-core:${Deps.Versions.ESPRESSO_CORE}")
+    androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.test.junitKtx)
+    androidTestImplementation(libs.androidx.test.espressoCore)
 }

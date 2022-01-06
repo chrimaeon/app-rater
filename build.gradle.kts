@@ -14,32 +14,31 @@
  * limitations under the License.
  */
 
-import com.cmgapps.gradle.sendCreateReleaseRequest
+@file:Suppress("UnstableApiUsage")
+
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import org.gradle.api.tasks.wrapper.Wrapper.DistributionType
 
 buildscript {
     repositories {
         google()
-        jcenter()
         mavenCentral()
     }
 
     dependencies {
-        classpath("com.android.tools.build:gradle:" + Deps.Versions.ANDROID_PLUGIN)
-        classpath(kotlin("gradle-plugin", version = Deps.Versions.KOTLIN))
+        classpath(libs.androidPluginDep)
+        classpath(libs.kotlinPluginDep)
     }
 }
 
 plugins {
-    id("com.github.ben-manes.versions") version Deps.Versions.VERSIONS_PLUGIN
-    id("org.jetbrains.changelog") version Deps.Versions.CHANGELOG_PLUGIN
-    id("org.jetbrains.dokka") version Deps.Versions.DOKKA_PLUGIN apply false
+    alias(libs.plugins.benManesVersions)
+    alias(libs.plugins.changelog)
+    alias(libs.plugins.dokka) apply false
 }
 
 allprojects {
     repositories {
-        jcenter()
         google()
         mavenCentral()
     }
@@ -61,27 +60,11 @@ tasks {
 
     named<Wrapper>("wrapper") {
         distributionType = DistributionType.ALL
-        gradleVersion = Deps.Versions.GRADLE
-    }
-
-    register("createGithubRelease") {
-        val versionName: String by project
-        if (!changelog.has(versionName)) {
-            dependsOn(patchChangelog)
-        }
-        doLast {
-            val changelog = changelog.get(versionName).toText()
-            sendCreateReleaseRequest(
-                versionName,
-                changelog
-            )?.let {
-                logger.lifecycle(it.htmlUrl)
-            }
-        }
+        gradleVersion = libs.versions.gradle.get()
     }
 }
 
 changelog {
     val versionName: String by project
-    version = versionName
+    version.set(versionName)
 }
